@@ -1,0 +1,46 @@
+/* App-specific styles */
+
+/* Ensure smooth scrolling behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Prevent horizontal overflow */
+body {
+  overflow-x: hidden;
+}
+
+/* Section base styles */
+section {
+  position: relative;
+}
+
+/* Ensure content is above watermarks */
+.relative.z-10 {
+  position: relative;
+  z-index: 10;
+}
+
+/* Mobile touch improvements */
+@media (hover: none) {
+  .service-card:hover,
+  .case-card:hover,
+  .skill-pill:hover {
+    transform: none;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  html {
+    scroll-behavior: auto;
+  }
+}
