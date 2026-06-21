@@ -5,10 +5,10 @@ export const siteConfig = {
   // Personal Info
   personal: {
     name: "Ashraful Alam Ashik",
-    shortName: "AAA",
-    initials: "AAA",
-    title: "Digital Operation Manager | SEO Specialist | WordPress Developer",
-    tagline: "SEO · Web Design · Digital Operations",
+    shortName: "Ashik",
+    initials: "A",
+    title: "Elite DevSecOps Engineer | Senior Full-Stack Architect",
+    tagline: "Full-Stack & DevSecOps · Automation · Web Design & SEO",
     location: "Birgram, Kharna, Shajahanpur, Bogura-5800, Bangladesh",
     phone: "+8801737940250",
     email: "aa.ashik777@gmail.com",
@@ -21,9 +21,11 @@ export const siteConfig = {
   // Hero Section
   hero: {
     typewriterTexts: [
-      "SEO Expert",
-      "Web Designer",
-      "Digital Operations Manager",
+      "Full-Stack Architect",
+      "DevSecOps Engineer",
+      "Automation Expert",
+      "WordPress Developer",
+      "SEO Specialist",
     ],
     stats: [
       { value: "50+", label: "Projects Completed" },
@@ -36,9 +38,9 @@ export const siteConfig = {
   // About Section
   about: {
     paragraphs: [
-      "Dynamic Digital Operation Manager with 3+ years of proven expertise in SEO optimization, team leadership, and digital operations. Successfully managed two operational branches and led cross-functional teams to deliver high-impact SEO campaigns.",
-      "Currently serving as Assistant Operation (Technical SEO Specialist & WordPress Customization) at Future Minds Academy, where I oversee all digital operations, content workflow, and performance monitoring. I lead SEO, website management, and automation-based operational improvements.",
-      "Demonstrated proficiency in WordPress development, PHP customization, automation workflows (n8n), and prompt engineering. Committed to driving digital growth through data-driven strategies and operational excellence.",
+      "Dynamic Senior Full-Stack Architect & DevSecOps Engineer with 3+ years of experience designing secure, high-performance web applications, automating deployment pipelines, and building robust cloud infrastructures.",
+      "Currently serving as Lead Full-Stack Architect & DevSecOps Engineer at Future Minds Academy, where I oversee system architecture, API designs, and secure deployment workflows. I lead Laravel and React/Next.js integrations, database optimizations, and n8n-based automation pipelines.",
+      "Proficient in containerization, CI/CD pipelines, zero-trust security setups, and automation workflows, while maintaining strong foundations in WordPress customization and Technical SEO audits. Passionate about writing clean, secure, and well-tested code while ensuring peak performance."
     ],
     quickStats: [
       { value: "200+", label: "Team Members Managed" },
@@ -49,47 +51,47 @@ export const siteConfig = {
   // Experience Section
   experience: {
     current: {
-      title: "Assistant Operation (Technical SEO Specialist & WordPress Customization)",
+      title: "Lead Full-Stack Architect & DevSecOps Engineer",
       company: "Future Minds Academy",
       period: "Nov 2024 - Present",
       location: "Bogura, Bangladesh",
       description: [
-        "Overseeing all digital operations, content workflow, and performance monitoring",
-        "Leading SEO, website management, and automation-based operational improvements",
-        "Developing conversion-focused website funnels to improve student sign-ups",
-        "Managing cross-functional teams to ensure high-quality digital service delivery",
+        "Architecting secure and scalable multi-vendor marketplaces and educational platforms using Next.js 16 and Laravel 12",
+        "Designing stateless Sanctum authentication, Redis-backed OTP security, and robust database architectures",
+        "Implementing zero-trust security systems, including secure HttpOnly cookie middleware and payment gateway signature verification",
+        "Managing deployment pipelines, CORS configurations, and secure Cloudflare R2 file storage sandboxes",
       ],
     },
     previous: [
       {
-        title: "SEO In-Charge",
+        title: "Full-Stack Developer & Security Lead",
         company: "SEO Expate BD",
         period: "May 2024 - Nov 2024",
         location: "Bogura, Bangladesh",
         description: [
-          "Managed SEO operations and supervised 200+ professionals",
-          "Implemented advanced Technical SEO strategies, resulting in significant improvements in search rankings and organic traffic",
-          "Designed and customized WordPress websites with PHP-based solutions and landing pages",
+          "Supervised a team of developers in building and optimizing web applications with PHP, Laravel, and WordPress",
+          "Implemented advanced application security practices and optimized site load speed for international clients",
+          "Created custom plugins, custom payment gateway webhooks, and automated system workflows",
         ],
       },
       {
-        title: "SEO Team Leader",
+        title: "Backend Engineer & WordPress Developer",
         company: "SEO Expate BD",
         period: "Dec 2023 - May 2024",
         location: "Bogura, Bangladesh",
         description: [
-          "Led a team of SEO professionals in executing client projects",
-          "Conducted comprehensive website audits and resolved critical technical issues",
+          "Developed custom PHP and database solutions for complex websites",
+          "Conducted deep-dive security audits and resolved critical performance and database bottlenecks",
         ],
       },
       {
-        title: "SEO Worker",
+        title: "Junior Web Developer",
         company: "SEO Expate BD",
         period: "Sep 2023 - Dec 2023",
         location: "Bogura, Bangladesh",
         description: [
-          "Performed on-page and off-page SEO tasks",
-          "Assisted in keyword research and competitor analysis",
+          "Assisted in building custom templates and layouts with HTML, CSS, and JavaScript",
+          "Integrated backend APIs and database tables",
         ],
       },
     ],
@@ -126,28 +128,49 @@ export const siteConfig = {
   // Services Section
   services: [
     {
-      title: "SEO-Optimized Website Design",
-      description: "WordPress websites built from the ground up for search visibility and conversion. Clean code, fast loading, and mobile-first design.",
+      title: "Full-Stack Web Architecture",
+      description: "End-to-end web application development using high-performance stacks like Next.js, React, Laravel, and PostgreSQL. Clean code, type-safety, and mobile-first design.",
       icon: "Globe",
-      tags: ["WordPress", "SEO Ready", "Responsive"],
+      tags: ["Next.js", "Laravel", "React"],
     },
     {
-      title: "Technical SEO & Performance",
-      description: "Comprehensive site audits, speed optimization, schema markup implementation, and technical fixes that improve rankings.",
+      title: "DevSecOps & Security Audits",
+      description: "Hardening system architectures with stateless auth, Redis-backed OTP lockout, strict input validation, payment signature checks, and sandboxed storage integrations.",
       icon: "Zap",
-      tags: ["Site Audits", "Speed Optimization", "Schema Markup"],
+      tags: ["Stateless Auth", "HMAC Checks", "Form Validation"],
     },
     {
-      title: "Website Redesign",
-      description: "Transform outdated websites into modern, fast, conversion-focused platforms that reflect your brand and drive results.",
+      title: "System Automation & API Design",
+      description: "Automating operational workflows using Redis, n8n, and custom cron schedulers. Building scalable RESTful and GraphQL APIs with robust caching.",
       icon: "RefreshCw",
-      tags: ["UI/UX", "Conversion Focus", "Modern Design"],
+      tags: ["Redis Cache", "API Design", "n8n Automation"],
+    },
+    {
+      title: "SEO & WordPress Customization",
+      description: "WordPress theme/plugin customization, landing page designs, and technical search engine optimization (SEO) audits to ensure search visibility and fast load times.",
+      icon: "Settings",
+      tags: ["WordPress", "Technical SEO", "Speed Optimization"],
     },
   ],
 
   // Case Studies Section
   caseStudies: [
     {
+      slug: "future-shop",
+      category: "E-COMMERCE & DEVSECOPS",
+      title: "Future Shop: Secure Multi-Vendor Marketplace",
+      problem: "Traditional local retail models in Bogura lack secure, scalable, mobile-first marketplace infrastructure, exposing transactions and inventory to exploits.",
+      solution: "Architected a zero-trust multi-vendor platform with Redis-backed OTP lockout, strict database locking, stateless auth, and robust server-side checkouts.",
+      results: [
+        "100% complete Laravel backend built",
+        "Zero vulnerabilities in Sanctum/OTP auth",
+        "Pessimistic locking prevents double sales",
+        "85% MVP complete with high-density admin dashboard",
+      ],
+      featured: true,
+    },
+    {
+      slug: "local-retail-seo",
       category: "E-COMMERCE",
       title: "E-commerce SEO Optimization for Local Retailer",
       problem: "A local retail client was struggling with low organic visibility, poor site speed (8+ seconds load time), and zero conversions from organic traffic.",
@@ -158,9 +181,10 @@ export const siteConfig = {
         "15 keywords ranked on first page of Google",
         "Organic conversions increased from 0 to 45/month",
       ],
-      featured: true,
+      featured: false,
     },
     {
+      slug: "corporate-redesign",
       category: "CORPORATE",
       title: "Corporate Website Redesign for Service Company",
       problem: "A B2B service company had an outdated website with poor mobile experience, high bounce rate (78%), and low lead generation.",
