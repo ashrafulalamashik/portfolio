@@ -14,10 +14,11 @@ import {
   Server,
   Code
 } from 'lucide-react';
-import { caseStudiesDetailConfig } from '../config/caseStudiesDetailConfig';
 import siteConfig from '../config/siteConfig';
 
 gsap.registerPlugin(ScrollTrigger);
+
+const CACHE_BUSTER = Date.now();
 
 // Particle Component
 function ParticleBackground() {
@@ -126,7 +127,51 @@ export default function CaseStudyDetail() {
   const { slug } = useParams<{ slug: string }>();
   const mainRef = useRef<HTMLDivElement>(null);
 
-  const data = slug ? caseStudiesDetailConfig[slug] : null;
+  const rawData = slug ? siteConfig.caseStudies.find(study => study.slug === slug) : null;
+
+  // Process data with robust fallbacks to support simple dynamically added case studies
+  const data = rawData ? {
+    ...rawData,
+    category: rawData.category || "Case Study",
+    title: rawData.title || "Untitled Project",
+    subtitle: rawData.subtitle || rawData.title || "Detailed project case study.",
+    role: rawData.role || "Lead Full-Stack Web Developer",
+    status: rawData.status || "Completed",
+    completionProgress: rawData.completionProgress || {
+      backend: 100,
+      frontend: 100
+    },
+    techStack: rawData.techStack || {
+      frontend: ["React", "TypeScript", "Tailwind CSS"],
+      backend: ["Laravel", "MySQL"],
+      infrastructure: ["Web Hosting"]
+    },
+    summary: rawData.summary || rawData.problem || "",
+    challenge: rawData.challenge || {
+      description: rawData.problem || "Implementing a custom service solution to address client requirements.",
+      objectives: rawData.results || ["Build a scalable, lightweight architecture.", "Optimize speed and organic performance."]
+    },
+    architectureAndSecurity: rawData.architectureAndSecurity || {
+      title: "System Architecture & Security Highlights",
+      points: [
+        {
+          title: "Production Implementation",
+          description: rawData.solution || "Custom business logic and API integrations."
+        }
+      ]
+    },
+    keyFeatures: rawData.keyFeatures || [
+      {
+        title: "Responsive Front-End UI",
+        description: "Mobile-first layouts with modern user experiences and fast load times."
+      },
+      {
+        title: "Secure Operations",
+        description: rawData.solution || "Robust backend integrations that guarantee system reliability."
+      }
+    ],
+    outcomes: rawData.outcomes || rawData.results || ["Project successfully optimized and launched."]
+  } : null;
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -188,8 +233,12 @@ export default function CaseStudyDetail() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14 sm:h-16">
             <Link to="/" className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#22C55E] to-[#16A34A] flex items-center justify-center text-white font-bold text-sm">
-                {siteConfig.personal.initials}
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#22C55E] to-[#16A34A] flex items-center justify-center text-white font-bold text-sm overflow-hidden">
+                {siteConfig.siteIdentity?.logoType === 'image' && siteConfig.siteIdentity?.logoImgPath ? (
+                  <img src={`${siteConfig.siteIdentity.logoImgPath}?v=${CACHE_BUSTER}`} alt="Logo" className="w-full h-full object-cover" />
+                ) : (
+                  siteConfig.personal.initials
+                )}
               </div>
               <span className="text-sm sm:text-base font-semibold tracking-tight hidden sm:block">
                 {siteConfig.personal.shortName}
@@ -208,7 +257,17 @@ export default function CaseStudyDetail() {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-24 sm:pt-32 pb-12 px-4 sm:px-6 lg:px-8 relative">
+      <section className="pt-24 sm:pt-32 pb-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        {data.image && (
+          <div className="absolute inset-0 z-0">
+            <img 
+              src={data.image} 
+              alt={data.title} 
+              className="w-full h-full object-cover opacity-10 filter blur-sm"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/85 to-[#0A0A0A]"></div>
+          </div>
+        )}
         <div className="max-w-4xl mx-auto relative z-10 text-center md:text-left">
           <span className="header-animate inline-block px-4 py-1.5 bg-[#22C55E]/10 border border-[#22C55E]/30 rounded-full text-[#22C55E] text-xs sm:text-sm font-medium mb-6">
             {data.category}

@@ -2,209 +2,536 @@
 // No need to modify component files
 
 export const siteConfig = {
-  // Personal Info
-  personal: {
-    name: "Ashraful Alam Ashik",
-    shortName: "Ashik",
-    initials: "A",
-    title: "Elite DevSecOps Engineer | Senior Full-Stack Architect",
-    tagline: "Full-Stack & DevSecOps · Automation · Web Design & SEO",
-    location: "Birgram, Kharna, Shajahanpur, Bogura-5800, Bangladesh",
-    phone: "+8801737940250",
-    email: "aa.ashik777@gmail.com",
-    whatsapp: "http://wa.me/+8801737940250",
-    linkedin: "https://www.linkedin.com/in/ashraful-alam-ashik/",
-    experience: "3+",
-    cvPath: "/cv-ashraful-alam-ashik.pdf",
+  "personal": {
+    "name": "Ashraful Alam Ashik",
+    "shortName": "Ashik",
+    "initials": "AA",
+    "role": "Digital Operations Manager & Full-Stack Web Developer",
+    "tagline": "Full-Stack Development · Digital Operations & SEO · Automation",
+    "location": "Birgram, Kharna, Shajahanpur, Bogura-5800, Bangladesh",
+    "phone": "+8801737940250",
+    "email": "aa.ashik777@gmail.com",
+    "whatsapp": "http://wa.me/+8801737940250",
+    "linkedin": "https://www.linkedin.com/in/ashraful-alam-ashik/",
+    "experience": "3+",
+    "cvPath": "Professional CV - Ashraful Alam Ashik.pdf",
+    "profileImgPath": "profile.png",
+    "socials": [
+      {
+        "platform": "WhatsApp",
+        "url": "http://wa.me/+8801737940250",
+        "icon": "MessageCircle"
+      },
+      {
+        "platform": "LinkedIn",
+        "url": "https://www.linkedin.com/in/ashraful-alam-ashik/",
+        "icon": "Linkedin"
+      }
+    ]
   },
-
-  // Hero Section
-  hero: {
-    typewriterTexts: [
-      "Full-Stack Architect",
-      "DevSecOps Engineer",
+  "hero": {
+    "typewriterTexts": [
+      "Full-Stack Developer",
+      "Operations Manager",
       "Automation Expert",
       "WordPress Developer",
-      "SEO Specialist",
+      "SEO Specialist"
     ],
-    stats: [
-      { value: "50+", label: "Projects Completed" },
-      { value: "30+", label: "Happy Clients" },
-      { value: "3+", label: "Years Experience" },
-      { value: "100%", label: "Client Satisfaction" },
+    "stats": [
+      {
+        "value": "50+",
+        "label": "Projects Completed"
+      },
+      {
+        "value": "30+",
+        "label": "Happy Clients"
+      },
+      {
+        "value": "3+",
+        "label": "Years Experience"
+      },
+      {
+        "value": "100%",
+        "label": "Client Satisfaction"
+      }
     ],
+    "metadata": [
+      "Bogura-5800, Bangladesh",
+      "3+ Years Experience"
+    ]
   },
-
-  // About Section
-  about: {
-    paragraphs: [
-      "Dynamic Senior Full-Stack Architect & DevSecOps Engineer with 3+ years of experience designing secure, high-performance web applications, automating deployment pipelines, and building robust cloud infrastructures.",
-      "Currently serving as Lead Full-Stack Architect & DevSecOps Engineer at Future Minds Academy, where I oversee system architecture, API designs, and secure deployment workflows. I lead Laravel and React/Next.js integrations, database optimizations, and n8n-based automation pipelines.",
-      "Proficient in containerization, CI/CD pipelines, zero-trust security setups, and automation workflows, while maintaining strong foundations in WordPress customization and Technical SEO audits. Passionate about writing clean, secure, and well-tested code while ensuring peak performance."
+  "about": {
+    "paragraphs": [
+      "Dynamic Digital Operations Manager and Full-Stack Web Developer with 3+ years of proven expertise in SEO optimization, team leadership, and digital operations, complemented by hands-on experience building secure, scalable web applications using Laravel, Next.js, and React. Successfully managed two operational branches and led cross-functional teams of 200+ professionals, while independently architecting and delivering full-stack platforms — from multi-vendor marketplaces to AI-powered booking systems. Committed to driving digital growth through data-driven strategies, clean code, and operational excellence.",
+      "Currently serving as Operation Manager (Technical SEO Specialist & WordPress Customization) at Future Minds Academy, where I oversee digital operations, website funnels, and process automation. I lead n8n-based operational automations and build robust full-stack solutions to optimize system and team performance."
     ],
-    quickStats: [
-      { value: "200+", label: "Team Members Managed" },
-      { value: "2", label: "Branches Managed" },
+    "quickStats": [
+      {
+        "value": "200+",
+        "label": "Team Members Managed"
+      },
+      {
+        "value": "2",
+        "label": "Branches Managed"
+      }
     ],
+    "aboutImgPath": "Passport picc.png"
   },
-
-  // Experience Section
-  experience: {
-    current: {
-      title: "Lead Full-Stack Architect & DevSecOps Engineer",
-      company: "Future Minds Academy",
-      period: "Nov 2024 - Present",
-      location: "Bogura, Bangladesh",
-      description: [
-        "Architecting secure and scalable multi-vendor marketplaces and educational platforms using Next.js 16 and Laravel 12",
-        "Designing stateless Sanctum authentication, Redis-backed OTP security, and robust database architectures",
-        "Implementing zero-trust security systems, including secure HttpOnly cookie middleware and payment gateway signature verification",
-        "Managing deployment pipelines, CORS configurations, and secure Cloudflare R2 file storage sandboxes",
+  "experience": {
+    "current": {
+      "title": "Operation Manager",
+      "company": "Future Minds Academy",
+      "period": "2025 - Present",
+      "location": "Bogura, Bangladesh",
+      "description": [
+        "Overseeing all digital operations, content workflow, and performance monitoring",
+        "Leading SEO, website management, and automation-based operational improvements",
+        "Developing conversion-focused website funnels to improve student sign-ups",
+        "Managing cross-functional teams to ensure high-quality digital service delivery",
+        "Building and maintaining full-stack web applications using Laravel, Next.js, and React for internal tools and client-facing projects",
+        "Automating operational workflows with n8n to reduce manual tasks and improve efficiency"
+      ]
+    },
+    "previous": [
+      {
+        "title": "Assistant Operation (Technical SEO Specialist & WordPress Customization)",
+        "company": "SEO Expate Bangladesh Ltd.",
+        "period": "Nov 2024 - Nov 2025",
+        "location": "Bogura, Bangladesh",
+        "description": [
+          "Managed daily operational tasks, SEO campaign executions, and WordPress site performance reviews",
+          "Improved organic visibility and technical performance across academy landing pages",
+          "Set up initial operational tracking and analytics integrations"
+        ]
+      },
+      {
+        "title": "SEO In-Charge",
+        "company": "SEO Expate Bangladesh Ltd.",
+        "period": "2023 - 2025",
+        "location": "Bogura, Bangladesh",
+        "description": [
+          "Managed SEO operations and supervised 200+ professionals, ensuring top-quality project execution and team performance",
+          "Implemented advanced Technical SEO strategies, resulting in significant improvements in search rankings and organic traffic",
+          "Designed and customized WordPress websites with PHP-based solutions and landing pages for diverse client portfolios",
+          "Developed automation workflows using n8n, streamlining marketing processes and enhancing operational efficiency",
+          "Conducted comprehensive website audits, resolved critical technical issues, and delivered projects exceeding client expectations"
+        ]
+      }
+    ]
+  },
+  "projects": [
+    {
+      "title": "Future Shop — Multi-Vendor E-Commerce Marketplace",
+      "description": "Full-stack marketplace platform for local retailers in Sherpur & Bogura, built with Laravel 12 and Next.js 16. Features secure vendor management, wallet & coupon systems, and a modern Amazon/Daraz-style shopping experience.",
+      "tags": [
+        "Laravel 12",
+        "Next.js 16",
+        "MySQL",
+        "TailwindCSS"
+      ]
+    },
+    {
+      "title": "জনসংযোগ ২৪/৭ — MP Civic Engagement Portal",
+      "description": "Web platform enabling constituents to submit and track complaints, suggestions, and ideas directly to their elected representative. Built with Next.js and Prisma, featuring an admin dashboard and automated Telegram notifications.",
+      "tags": [
+        "Next.js",
+        "Prisma",
+        "PostgreSQL",
+        "Telegram API"
+      ]
+    },
+    {
+      "title": "AI Voice Appointment Booking System",
+      "description": "Bengali-language voice AI assistant that lets hospital patients book appointments entirely by phone, with no human operator needed. Built using VAPI.ai, n8n automation, and live calendar integration.",
+      "tags": [
+        "VAPI.ai",
+        "n8n",
+        "AI/Voice",
+        "Calendar Integration"
+      ]
+    },
+    {
+      "title": "MP-Tracker — Parliamentary Constituency Management System",
+      "description": "Laravel-based system managing 600,000+ voter records and donation tracking, with custom Bengali-language PDF report generation.",
+      "tags": [
+        "Laravel",
+        "MySQL",
+        "PDF Generation",
+        "Database Design"
+      ]
+    }
+  ],
+  "certifications": [
+    {
+      "title": "Search Engine Optimization (SEO)",
+      "issuer": "SEO Expate Bangladesh Ltd.",
+      "year": "2023",
+      "icon": "seo",
+      "image": ""
+    },
+    {
+      "title": "Website Design & WordPress Customization",
+      "issuer": "Institute of Technical & IT",
+      "year": "2024",
+      "icon": "web",
+      "image": ""
+    },
+    {
+      "title": "Leadership & Team Management",
+      "issuer": "SEO Expate Bangladesh Ltd.",
+      "year": "2024",
+      "icon": "leadership",
+      "image": ""
+    },
+    {
+      "title": "Computer Office Application",
+      "issuer": "Institute of Technical & IT",
+      "year": "2019",
+      "icon": "office",
+      "image": ""
+    }
+  ],
+  "education": [
+    {
+      "degree": "BBA in Management",
+      "school": "Government Sherpur College, Bogura",
+      "year": "Expected 2026"
+    },
+    {
+      "degree": "HSC, Business Studies",
+      "school": "Bogra Government College",
+      "year": "2020 | GPA: 4.50"
+    }
+  ],
+  "services": [
+    {
+      "title": "Full-Stack Web Architecture",
+      "description": "End-to-end web application development using high-performance stacks like Next.js, React, Laravel, and PostgreSQL. Clean code, type-safety, and mobile-first design.",
+      "icon": "Globe",
+      "tags": [
+        "Next.js",
+        "Laravel",
+        "React"
       ],
-    },
-    previous: [
-      {
-        title: "Full-Stack Developer & Security Lead",
-        company: "SEO Expate BD",
-        period: "May 2024 - Nov 2024",
-        location: "Bogura, Bangladesh",
-        description: [
-          "Supervised a team of developers in building and optimizing web applications with PHP, Laravel, and WordPress",
-          "Implemented advanced application security practices and optimized site load speed for international clients",
-          "Created custom plugins, custom payment gateway webhooks, and automated system workflows",
-        ],
-      },
-      {
-        title: "Backend Engineer & WordPress Developer",
-        company: "SEO Expate BD",
-        period: "Dec 2023 - May 2024",
-        location: "Bogura, Bangladesh",
-        description: [
-          "Developed custom PHP and database solutions for complex websites",
-          "Conducted deep-dive security audits and resolved critical performance and database bottlenecks",
-        ],
-      },
-      {
-        title: "Junior Web Developer",
-        company: "SEO Expate BD",
-        period: "Sep 2023 - Dec 2023",
-        location: "Bogura, Bangladesh",
-        description: [
-          "Assisted in building custom templates and layouts with HTML, CSS, and JavaScript",
-          "Integrated backend APIs and database tables",
-        ],
-      },
-    ],
-  },
-
-  // Certifications Section
-  certifications: [
-    {
-      title: "Search Engine Optimization (SEO)",
-      issuer: "SEO Expate Bangladesh Ltd.",
-      year: "2023",
-      icon: "seo",
+      "price": "",
+      "pricingDetails": "",
+      "showPricing": false
     },
     {
-      title: "Website Design & WordPress Customization",
-      issuer: "Institute of Technical & IT",
-      year: "2024",
-      icon: "web",
+      "title": "DevSecOps & Security Audits",
+      "description": "Hardening system architectures with stateless auth, Redis-backed OTP lockout, strict input validation, payment signature checks, and sandboxed storage integrations.",
+      "icon": "Zap",
+      "tags": [
+        "Stateless Auth",
+        "HMAC Checks",
+        "Form Validation"
+      ],
+      "price": "",
+      "pricingDetails": "",
+      "showPricing": false
     },
     {
-      title: "Leadership & Team Management",
-      issuer: "SEO Expate Bangladesh Ltd.",
-      year: "2024",
-      icon: "leadership",
+      "title": "System Automation & API Design",
+      "description": "Automating operational workflows using Redis, n8n, and custom cron schedulers. Building scalable RESTful and GraphQL APIs with robust caching.",
+      "icon": "RefreshCw",
+      "tags": [
+        "Redis Cache",
+        "API Design",
+        "n8n Automation"
+      ],
+      "price": "",
+      "pricingDetails": "",
+      "showPricing": false
     },
     {
-      title: "Computer Office Application",
-      issuer: "Institute of Technical & IT",
-      year: "2019",
-      icon: "office",
-    },
+      "title": "SEO & WordPress Customization",
+      "description": "WordPress theme/plugin customization, landing page designs, and technical search engine optimization (SEO) audits to ensure search visibility and fast load times.",
+      "icon": "Settings",
+      "tags": [
+        "WordPress",
+        "Technical SEO",
+        "Speed Optimization"
+      ],
+      "price": "",
+      "pricingDetails": "",
+      "showPricing": true
+    }
   ],
-
-  // Services Section
-  services: [
+  "caseStudies": [
     {
-      title: "Full-Stack Web Architecture",
-      description: "End-to-end web application development using high-performance stacks like Next.js, React, Laravel, and PostgreSQL. Clean code, type-safety, and mobile-first design.",
-      icon: "Globe",
-      tags: ["Next.js", "Laravel", "React"],
-    },
-    {
-      title: "DevSecOps & Security Audits",
-      description: "Hardening system architectures with stateless auth, Redis-backed OTP lockout, strict input validation, payment signature checks, and sandboxed storage integrations.",
-      icon: "Zap",
-      tags: ["Stateless Auth", "HMAC Checks", "Form Validation"],
-    },
-    {
-      title: "System Automation & API Design",
-      description: "Automating operational workflows using Redis, n8n, and custom cron schedulers. Building scalable RESTful and GraphQL APIs with robust caching.",
-      icon: "RefreshCw",
-      tags: ["Redis Cache", "API Design", "n8n Automation"],
-    },
-    {
-      title: "SEO & WordPress Customization",
-      description: "WordPress theme/plugin customization, landing page designs, and technical search engine optimization (SEO) audits to ensure search visibility and fast load times.",
-      icon: "Settings",
-      tags: ["WordPress", "Technical SEO", "Speed Optimization"],
-    },
-  ],
-
-  // Case Studies Section
-  caseStudies: [
-    {
-      slug: "future-shop",
-      category: "E-COMMERCE & DEVSECOPS",
-      title: "Future Shop: Secure Multi-Vendor Marketplace",
-      problem: "Traditional local retail models in Bogura lack secure, scalable, mobile-first marketplace infrastructure, exposing transactions and inventory to exploits.",
-      solution: "Architected a zero-trust multi-vendor platform with Redis-backed OTP lockout, strict database locking, stateless auth, and robust server-side checkouts.",
-      results: [
+      "slug": "future-shop",
+      "image": "",
+      "category": "E-COMMERCE & DEVSECOPS",
+      "title": "Future Shop: Secure Multi-Vendor Marketplace",
+      "problem": "Traditional local retail models in Bogura lack secure, scalable, mobile-first marketplace infrastructure, exposing transactions and inventory to exploits.",
+      "solution": "Architected a zero-trust multi-vendor platform with Redis-backed OTP lockout, strict database locking, stateless auth, and robust server-side checkouts.",
+      "results": [
         "100% complete Laravel backend built",
         "Zero vulnerabilities in Sanctum/OTP auth",
         "Pessimistic locking prevents double sales",
-        "85% MVP complete with high-density admin dashboard",
+        "85% MVP complete with high-density admin dashboard"
       ],
-      featured: true,
+      "featured": true,
+      "subtitle": "A high-performance, mobile-first, multi-vendor marketplace designed with a zero-trust security architecture.",
+      "role": "Lead Full-Stack Architect & DevSecOps Engineer (Solo Developer)",
+      "status": "MVP ~85% Complete (Backend 100% Complete)",
+      "completionProgress": {
+        "backend": 100,
+        "frontend": 85
+      },
+      "techStack": {
+        "frontend": [
+          "Next.js 16 (App Router)",
+          "React 19",
+          "TypeScript",
+          "Tailwind CSS 4",
+          "shadcn/ui",
+          "Zustand",
+          "Recharts"
+        ],
+        "backend": [
+          "Laravel 12 (PHP 8.2)",
+          "PostgreSQL 18.4",
+          "Redis (Cache & OTP)"
+        ],
+        "infrastructure": [
+          "Cloudflare R2",
+          "SSL Commerz Payment Gateway",
+          "SSL Wireless SMS API"
+        ]
+      },
+      "summary": "Future Shop is a next-generation multi-vendor e-commerce marketplace engineered specifically for local commerce in the Sherpur and Bogura regions of Bangladesh. Architected as a high-performance, mobile-first MVP, the platform bridges the gap between rural and semi-urban retail hubs and digital buyers. Developed single-handedly, the project demonstrates how modern architectural patterns, strict security parameters, and robust automated operations can deliver enterprise-grade performance on a localized scale.",
+      "challenge": {
+        "description": "Local commerce in Bogura/Sherpur requires a mobile-first, lightweight interface (given variable mobile network quality) while supporting complex multi-role operations (Super Admins, Vendors, Delivery Boys, and Customers) and localized payment/SMS systems. It also needs to prevent typical security loopholes in standard e-commerce scripts (such as SQL injection, cart-tampering, price exploits, and SMS OTP abuse).",
+        "objectives": [
+          "Create a hyper-fast mobile-first interface optimized for budget devices and fluctuating network connections.",
+          "Implement a secure, stateless authentication mechanism with robust rate-limiting.",
+          "Build a tamper-proof payment verification flow that defends against webhook exploits.",
+          "Establish pessimistic inventory locking at the database level to prevent race conditions during flash sales."
+        ]
+      },
+      "architectureAndSecurity": {
+        "title": "DevSecOps & Zero-Trust Security Implementation",
+        "points": [
+          {
+            "title": "Zero SQL Injection & Type-Safe Inputs",
+            "description": "Implemented an elliptical database interaction pattern using Eloquent ORM exclusively. No raw SQL queries are allowed in the repository layer. Inputs are parsed and validated at the HTTP boundary using dedicated Laravel FormRequest schemas containing strict type-checking.",
+            "codeSnippet": "// Example of FormRequest validation enforcing strict input schema\npublic function rules(): array {\n    return [\n        'product_id' => 'required|integer|exists:products,id',\n        'quantity'   => 'required|integer|min:1|max:10',\n        'payment_method' => 'required|string|in:cash_on_delivery,sslcommerz'\n    ];\n}"
+          },
+          {
+            "title": "Redis-Backed Stateless OTP Authentication",
+            "description": "All client requests are stateless and authenticated via Laravel Sanctum bearer tokens. Customer accounts are verified using phone OTPs stored temporarily in Redis. To prevent brute-force attacks and SMS gateway financial drain, the auth endpoint enforces a strict rate-limit and triggers a 60-minute IP/number lockout after 5 consecutive failed verification attempts.",
+            "codeSnippet": "// Rate-limiting configuration in Redis cache store\n$lockKey = \"otp_lock:\" . $phoneNumber;\n$attempts = Redis::incr($lockKey);\nif ($attempts > 5) {\n    Redis::expire($lockKey, 3600); // 1-hour block\n    throw new LockoutException(\"Too many verification attempts.\");\n}"
+          },
+          {
+            "title": "Defense-in-Depth XSS & Token Shielding",
+            "description": "Next.js frontend access tokens are kept strictly in client-side sessionStorage, ensuring they are deleted immediately upon closing the browser tab. All routing and middleware checks are secured via HttpOnly, Secure, and SameSite=Strict cookies to verify user identity at the edge, blocking unauthorized access prior to page rendering."
+          },
+          {
+            "title": "Tamper-Proof Payment Webhook Verification",
+            "description": "The SSL Commerz payment gateway webhook utilizes strict SHA-256 HMAC signature verification. On callback receipt, the backend re-verifies the transaction signature and queries the database to compare the absolute order amount and currency against the paid amount, preventing payload tampering, price exploits, and transaction replay attacks.",
+            "codeSnippet": "// Server-side payment validation webhook\n$isValidSignature = SSLCommerz::verifySignature($request->all());\nif (!$isValidSignature) {\n    return response()->json(['message' => 'Invalid signature'], 400);\n}\n$order = Order::findOrFail($request->order_id);\nif ($order->amount !== (float)$request->amount || $order->currency !== $request->currency) {\n    throw new PaymentMismatchException(\"Transaction verification failed.\");\n}"
+          },
+          {
+            "title": "Sandboxed File Handling & R2 Uploads",
+            "description": "All uploaded images are processed in a memory sandbox. Using Intervention Image v3, files undergo magic-byte and MIME checking to detect nested shell scripts within images. They are then compressed, converted to WebP formats, resized to standard dimensions, and uploaded to Cloudflare R2 using pre-signed secure URLs."
+          },
+          {
+            "title": "Security through Obscurity & Hydration Safety",
+            "description": "The administrative panel login endpoint is hidden under a custom obscure route (/fuminds) to bypass automated scanner bots. Additionally, secure CORS policies are enforced to restrict cross-origin scripts, and Next.js hydration safety wrappers prevent data leakage during server-to-client rendering."
+          }
+        ]
+      },
+      "keyFeatures": [
+        {
+          "title": "Dynamic Multi-Role RBAC",
+          "description": "Custom Role-Based Access Control enforcing distinct dashboard views, database views, and transaction boundaries for Super Admins, Vendors, Delivery Boys, and Customers."
+        },
+        {
+          "title": "Complex Performance Dashboard",
+          "description": "Built a double-panel collapsible sidebar layout featuring interactive business metrics (Revenue, Profit Margin tracking, low-stock warnings, vendor payouts) powered by Next.js Server Actions and visualized with Recharts."
+        },
+        {
+          "title": "Unified Cart & Stock Locking",
+          "description": "Engineered a cache-abstracted cart engine that merges guest and authenticated user carts on login. Implemented database-level pessimistic locking (sharedLock/lockForUpdate) during checkout, blocking race conditions on high-demand items."
+        },
+        {
+          "title": "Localized Mobile-First UX",
+          "description": "Strict viewport sizing down to 375px with 44px touch targets. Built to be highly responsive and lightweight for users on slow or variable cellular connections."
+        }
+      ],
+      "outcomes": [
+        "100% completed Laravel API layer with unified error handling and database transaction wrapper.",
+        "Bulletproof backend authentication with zero vulnerability surface on OTP and token exchange.",
+        "High scalability and low latency due to extensive Redis caching and Cloudflare R2 offloading.",
+        "Robust client-side protection blocking price, quantity, and payload modifications through strict server checks."
+      ]
     },
     {
-      slug: "local-retail-seo",
-      category: "E-COMMERCE",
-      title: "E-commerce SEO Optimization for Local Retailer",
-      problem: "A local retail client was struggling with low organic visibility, poor site speed (8+ seconds load time), and zero conversions from organic traffic.",
-      solution: "Implemented comprehensive technical SEO audit, optimized 150+ product pages with proper schema markup, improved Core Web Vitals, and built quality backlinks from industry-relevant sites.",
-      results: [
+      "slug": "local-retail-seo",
+      "image": "",
+      "category": "E-COMMERCE",
+      "title": "E-commerce SEO Optimization for Local Retailer",
+      "problem": "A local retail client was struggling with low organic visibility, poor site speed (8+ seconds load time), and zero conversions from organic traffic.",
+      "solution": "Implemented comprehensive technical SEO audit, optimized 150+ product pages with proper schema markup, improved Core Web Vitals, and built quality backlinks from industry-relevant sites.",
+      "results": [
         "Page load time reduced from 8s to 2.1s",
         "Organic traffic increased by 180% in 4 months",
         "15 keywords ranked on first page of Google",
-        "Organic conversions increased from 0 to 45/month",
+        "Organic conversions increased from 0 to 45/month"
       ],
-      featured: false,
+      "featured": false,
+      "subtitle": "How we reduced load times and boosted organic reach by 180% for a local merchant.",
+      "role": "SEO Specialist & Technical Web Consultant",
+      "status": "Completed",
+      "completionProgress": {
+        "backend": 100,
+        "frontend": 100
+      },
+      "techStack": {
+        "frontend": [
+          "WordPress",
+          "Custom CSS",
+          "Core Web Vitals Optimizers"
+        ],
+        "backend": [
+          "PHP Customizations"
+        ],
+        "infrastructure": [
+          "Google Search Console",
+          "Google Analytics",
+          "Ahrefs"
+        ]
+      },
+      "summary": "A local retail merchant was struggling with low organic search engine visibility, slow load times exceeding 8 seconds, and zero digital conversion rates. We implemented a comprehensive technical SEO restructure, optimized core assets, and established high-value local backlinks.",
+      "challenge": {
+        "description": "The client's website had massive unoptimized image assets, redundant scripts, missing schema markup, and incorrect meta setups. This caused search indexing issues and high bounce rates from mobile searchers.",
+        "objectives": [
+          "Optimize page speed performance and pass Core Web Vitals.",
+          "Implement detailed Product schema markup for Google Search snippets.",
+          "Improve organic keyword rankings on high-intent local search queries."
+        ]
+      },
+      "architectureAndSecurity": {
+        "title": "Technical SEO & Performance Architectures",
+        "points": [
+          {
+            "title": "Speed Restructure & Asset Deferral",
+            "description": "Compressed and migrated all site assets to next-gen WebP formats. Deferred non-critical JS/CSS execution, reducing the Largest Contentful Paint (LCP) from 6.8s to 1.8s."
+          },
+          {
+            "title": "Structured Schema Implementation",
+            "description": "Implemented JSON-LD schema markup dynamically for products, reviews, and local business address information. This led to rich snippets displaying price, stock availability, and ratings directly on search engine result pages (SERPs)."
+          }
+        ]
+      },
+      "keyFeatures": [
+        {
+          "title": "Technical Site Audits",
+          "description": "Fixed indexing loops, broken internal link structures, and resolved duplicate content issues."
+        },
+        {
+          "title": "On-Page Optimization",
+          "description": "Wrote optimized title tags, meta descriptions, and header tags for over 150+ product lines."
+        }
+      ],
+      "outcomes": [
+        "Page load speed decreased from 8 seconds to 2.1 seconds.",
+        "Organic traffic grew by 180% in the first 4 months following deployment.",
+        "15 competitive local keywords reached page one of Google Search.",
+        "Monthly conversions from organic search channels rose from 0 to 45/month."
+      ]
     },
     {
-      slug: "corporate-redesign",
-      category: "CORPORATE",
-      title: "Corporate Website Redesign for Service Company",
-      problem: "A B2B service company had an outdated website with poor mobile experience, high bounce rate (78%), and low lead generation.",
-      solution: "Redesigned the entire website with modern UI/UX, implemented conversion-focused landing pages, optimized for mobile-first indexing, and integrated CRM for lead tracking.",
-      results: [
+      "slug": "corporate-redesign",
+      "image": "",
+      "category": "CORPORATE",
+      "title": "Corporate Website Redesign for Service Company",
+      "problem": "A B2B service company had an outdated website with poor mobile experience, high bounce rate (78%), and low lead generation.",
+      "solution": "Redesigned the entire website with modern UI/UX, implemented conversion-focused landing pages, optimized for mobile-first indexing, and integrated CRM for lead tracking.",
+      "results": [
         "Bounce rate reduced from 78% to 32%",
         "Mobile traffic engagement increased by 150%",
         "Lead generation improved by 220%",
-        "Average session duration increased by 3x",
+        "Average session duration increased by 3x"
       ],
-      featured: false,
-    },
+      "featured": false,
+      "subtitle": "Transforming an outdated corporate portal into a lead-generating, mobile-first asset.",
+      "role": "Lead Full-Stack Web Developer & UI/UX Designer",
+      "status": "Completed",
+      "completionProgress": {
+        "backend": 100,
+        "frontend": 100
+      },
+      "techStack": {
+        "frontend": [
+          "React",
+          "Tailwind CSS",
+          "shadcn/ui",
+          "Framer Motion"
+        ],
+        "backend": [
+          "Laravel",
+          "PostgreSQL"
+        ],
+        "infrastructure": [
+          "CRM Integrations",
+          "Vercel Hosting"
+        ]
+      },
+      "summary": "A corporate B2B services firm was losing prospective leads due to an outdated, slow, and non-responsive web design that suffered from a high 78% bounce rate. We fully redesigned the platform to optimize lead funnels and integrate automatic CRM lead capturing.",
+      "challenge": {
+        "description": "The old site was not responsive on mobile screens, and the contact and intake forms were prone to errors, failing to forward leads to the sales team.",
+        "objectives": [
+          "Build a modern, responsive web application that loads instantly.",
+          "Establish clean UI/UX with smooth transitions using Framer Motion.",
+          "Integrate a secure, automated webhook connection to the company's internal CRM."
+        ]
+      },
+      "architectureAndSecurity": {
+        "title": "UI/UX & Integration Security",
+        "points": [
+          {
+            "title": "Mobile-First Fluid Layout",
+            "description": "Re-engineered all layouts using Tailwind's flexbox/grid models, ensuring identical rendering from small mobile viewports up to wide 4K displays."
+          },
+          {
+            "title": "Secure Webhook Form Submissions",
+            "description": "Designed secure REST endpoints to handle contact submissions, adding CSRF validation, email filtering, and sanitization before pushing lead objects to the CRM."
+          }
+        ]
+      },
+      "keyFeatures": [
+        {
+          "title": "Conversion-Focused Landing Pages",
+          "description": "Interactive service description pages with strategic Call-to-Action (CTA) triggers."
+        },
+        {
+          "title": "CRM System Integration",
+          "description": "Automatic lead routing, status classification, and email notifications to the operations team."
+        }
+      ],
+      "outcomes": [
+        "Bounce rate decreased from 78% to 32% within 30 days of launch.",
+        "Lead generation conversions rose by 220% due to clearer funnel designs.",
+        "Mobile traffic engagement increased by 150%, boosting average session duration by 3x."
+      ]
+    }
   ],
-
-  // Skills Section
-  skills: [
+  "skills": [
+    "Laravel (PHP)",
+    "Next.js",
+    "React",
+    "TypeScript",
+    "PostgreSQL",
+    "MySQL",
+    "n8n Automation",
+    "RESTful APIs",
+    "AI/Voice Integration",
     "Technical SEO",
     "On-page SEO",
     "Off-page SEO",
-    "WordPress",
+    "WordPress Customization",
     "PHP Customization",
     "Page Speed Optimization",
     "Schema Markup",
@@ -213,66 +540,65 @@ export const siteConfig = {
     "Ahrefs",
     "SEMrush",
     "Screaming Frog",
-    "n8n Automation",
     "HTML/CSS",
     "JavaScript",
     "Landing Page Design",
     "Core Web Vitals",
     "Team Leadership",
-    "Project Management",
+    "Project Management"
   ],
-
-  // Why Work With Me Section
-  whyWorkWithMe: [
+  "whyWorkWithMe": [
     {
-      title: "Proven Leadership Experience",
-      description: "Managed 200+ professionals across two operational branches. I understand how to lead teams and deliver results at scale.",
+      "title": "Proven Leadership Experience",
+      "description": "Managed 200+ professionals across two operational branches. I understand how to lead teams and deliver results at scale."
     },
     {
-      title: "Full-Stack Digital Expertise",
-      description: "From SEO strategy to WordPress development to digital operations—I handle the complete digital ecosystem.",
+      "title": "Full-Stack Digital Expertise",
+      "description": "From SEO strategy to WordPress development to digital operations—I handle the complete digital ecosystem."
     },
     {
-      title: "Data-Driven Approach",
-      description: "Every decision is backed by analytics and focused on measurable ROI for your business.",
+      "title": "Web Development & Automation",
+      "description": "Full-Stack Application Development (Laravel, Next.js, React), Database Design (PostgreSQL/MySQL), API Development & Integration"
     },
     {
-      title: "Automation & Efficiency",
-      description: "Expert in n8n workflows and process automation to streamline operations and reduce manual work.",
+      "title": "Data-Driven Approach",
+      "description": "Every decision is backed by analytics and focused on measurable ROI for your business."
     },
     {
-      title: "International Client Experience",
-      description: "Experience working with clients from USA, UK, and other international markets with clear communication.",
+      "title": "Automation & Efficiency",
+      "description": "Expert in n8n workflows and process automation to streamline operations and reduce manual work."
     },
+    {
+      "title": "International Client Experience",
+      "description": "Experience working with clients from USA, UK, and other international markets with clear communication."
+    }
   ],
-
-  // SEO Proposal Page
-  seoProposal: {
-    title: "SEO Proposal",
-    subtitle: "Choose the plan that fits your business goals",
-    plans: [
+  "seoProposal": {
+    "title": "SEO Proposal",
+    "subtitle": "Choose the plan that fits your business goals",
+    "plans": [
       {
-        name: "Starter SEO Plan",
-        price: "$120",
-        period: "month",
-        description: "Perfect for small businesses starting their SEO journey",
-        features: [
+        "name": "Starter SEO Plan",
+        "price": "$120",
+        "period": "month",
+        "description": "Perfect for small businesses starting their SEO journey",
+        "features": [
           "Technical SEO health monitoring",
           "Basic on-page optimisation (meta titles, descriptions, headers)",
           "Optimisation of 1 page per month",
           "Keyword tracking (up to 10 keywords)",
           "Foundational backlink building",
           "Google Search Console monitoring",
-          "Monthly performance report",
+          "Monthly performance report"
         ],
-        highlighted: false,
+        "highlighted": false
       },
       {
-        name: "Growth SEO Plan",
-        price: "$350",
-        period: "month",
-        description: "Ideal for growing businesses seeking aggressive growth",
-        features: [
+        "name": "Growth SEO Plan",
+        "price": "$350",
+        "period": "month",
+        "description": "Ideal for growing businesses seeking aggressive growth",
+        "features": [
           "Everything in Starter Plan",
           "Advanced technical optimisation",
           "Optimisation of up to 3 pages per month",
@@ -281,17 +607,17 @@ export const siteConfig = {
           "Quality backlink outreach campaign",
           "Keyword tracking (up to 30 keywords)",
           "Local SEO optimisation support",
-          "Detailed monthly strategy report",
+          "Detailed monthly strategy report"
         ],
-        highlighted: true,
-        badge: "Most Popular",
+        "highlighted": true,
+        "badge": "Most Popular"
       },
       {
-        name: "Authority SEO Plan",
-        price: "$750",
-        period: "month",
-        description: "For enterprises seeking market dominance",
-        features: [
+        "name": "Authority SEO Plan",
+        "price": "$750",
+        "period": "month",
+        "description": "For enterprises seeking market dominance",
+        "features": [
           "Everything in Growth Plan",
           "Full technical SEO management",
           "Core Web Vitals optimisation",
@@ -300,29 +626,182 @@ export const siteConfig = {
           "Conversion optimisation strategy",
           "Advanced competitor intelligence",
           "Bi-weekly reporting",
-          "Strategic SEO consultation sessions",
+          "Strategic SEO consultation sessions"
         ],
-        highlighted: false,
-      },
+        "highlighted": false
+      }
     ],
-    paymentTerms: [
+    "paymentTerms": [
       "Monthly payment in advance",
       "30-day cancellation notice",
       "No lock-in contract unless agreed",
-      "GST not included (if applicable)",
-    ],
+      "GST not included (if applicable)"
+    ]
   },
-
-  // Navigation
-  navigation: [
-    { label: "About", href: "#about" },
-    { label: "Experience", href: "#experience" },
-    { label: "Services", href: "#services" },
-    { label: "Case Studies", href: "#case-studies" },
-    { label: "Certifications", href: "#certifications" },
-    { label: "Skills", href: "#skills" },
-    { label: "SEO Proposal", href: "/seo-proposal" },
+  "proposals": [
+    {
+      "id": "seo-proposal",
+      "serviceTitle": "SEO & WordPress Customization",
+      "title": "SEO Proposal",
+      "subtitle": "Choose the plan that fits your business goals",
+      "plans": [
+        {
+          "name": "Starter SEO Plan",
+          "price": "$120",
+          "period": "month",
+          "description": "Perfect for small businesses starting their SEO journey",
+          "features": [
+            "Technical SEO health monitoring",
+            "Basic on-page optimisation (meta titles, descriptions, headers)",
+            "Optimisation of 1 page per month",
+            "Keyword tracking (up to 10 keywords)",
+            "Foundational backlink building",
+            "Google Search Console monitoring",
+            "Monthly performance report"
+          ],
+          "highlighted": false
+        },
+        {
+          "name": "Growth SEO Plan",
+          "price": "$350",
+          "period": "month",
+          "description": "Ideal for growing businesses seeking aggressive growth",
+          "features": [
+            "Everything in Starter Plan",
+            "Advanced technical optimisation",
+            "Optimisation of up to 3 pages per month",
+            "2 SEO-optimised blog posts per month",
+            "Competitor keyword analysis",
+            "Quality backlink outreach campaign",
+            "Keyword tracking (up to 30 keywords)",
+            "Local SEO optimisation support",
+            "Detailed monthly strategy report"
+          ],
+          "highlighted": true,
+          "badge": "Most Popular"
+        },
+        {
+          "name": "Authority SEO Plan",
+          "price": "$750",
+          "period": "month",
+          "description": "For enterprises seeking market dominance",
+          "features": [
+            "Everything in Growth Plan",
+            "Full technical SEO management",
+            "Core Web Vitals optimisation",
+            "4–6 SEO content pieces per month",
+            "High-authority backlink outreach",
+            "Conversion optimisation strategy",
+            "Advanced competitor intelligence",
+            "Bi-weekly reporting",
+            "Strategic SEO consultation sessions"
+          ],
+          "highlighted": false
+        }
+      ],
+      "paymentTerms": [
+        "Monthly payment in advance",
+        "30-day cancellation notice",
+        "No lock-in contract unless agreed",
+        "GST not included (if applicable)"
+      ]
+    }
   ],
+  "navigation": [
+    {
+      "label": "About",
+      "href": "#about"
+    },
+    {
+      "label": "Experience",
+      "href": "#experience"
+    },
+    {
+      "label": "Projects",
+      "href": "#projects"
+    },
+    {
+      "label": "Services",
+      "href": "#services"
+    },
+    {
+      "label": "Case Studies",
+      "href": "#case-studies"
+    },
+    {
+      "label": "Certifications",
+      "href": "#certifications"
+    },
+    {
+      "label": "Skills",
+      "href": "#skills"
+    }
+  ],
+  "skillCategories": [
+    {
+      "title": "SEO",
+      "icon": "Target",
+      "items": [
+        "Technical SEO",
+        "On-page SEO",
+        "Off-page SEO",
+        "Keyword Research",
+        "Schema Markup"
+      ]
+    },
+    {
+      "title": "WordPress & Web",
+      "icon": "Globe",
+      "items": [
+        "WordPress",
+        "PHP Customization",
+        "HTML/CSS",
+        "JavaScript",
+        "Landing Page Design"
+      ]
+    },
+    {
+      "title": "Web & Software Dev",
+      "icon": "Code",
+      "items": [
+        "Laravel (PHP), Next.js, React",
+        "PostgreSQL, MySQL",
+        "RESTful API Design",
+        "Secure Auth & RBAC",
+        "Git & GitHub Control",
+        "n8n Workflow Automation",
+        "AI Integration (VAPI.ai)"
+      ]
+    },
+    {
+      "title": "Analytics",
+      "icon": "BarChart3",
+      "items": [
+        "Google Analytics",
+        "Google Search Console",
+        "Ahrefs",
+        "SEMrush",
+        "Screaming Frog"
+      ]
+    },
+    {
+      "title": "Operations",
+      "icon": "Layers",
+      "items": [
+        "n8n Automation",
+        "Team Leadership",
+        "Project Management",
+        "Process Optimization"
+      ]
+    }
+  ],
+  "siteIdentity": {
+    "title": "Ashraful Alam Ashik | Digital Operations Manager & Full-Stack Web Developer",
+    "description": "Dynamic Digital Operations Manager and Full-Stack Web Developer with 3+ years of proven expertise in SEO optimization.",
+    "faviconPath": "profile.png",
+    "logoType": "image",
+    "logoImgPath": "profile.png"
+  }
 };
 
 export default siteConfig;

@@ -25,7 +25,14 @@ import {
   Target,
   BarChart3,
   Layers,
-  Medal
+  Medal,
+  Code,
+  Cpu,
+  Github,
+  Facebook,
+  Twitter,
+  Youtube,
+  Instagram
 } from 'lucide-react';
 import { HashRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
@@ -35,6 +42,51 @@ import CaseStudyDetail from './pages/CaseStudyDetail';
 import Admin from './pages/Admin';
 
 gsap.registerPlugin(ScrollTrigger);
+
+const CACHE_BUSTER = Date.now();
+
+const renderSocialIcon = (iconName: string) => {
+  const name = (iconName || '').toLowerCase();
+  switch (name) {
+    case 'messagecircle':
+    case 'whatsapp':
+      return <MessageCircle size={20} />;
+    case 'linkedin':
+      return <Linkedin size={20} />;
+    case 'github':
+      return <Github size={20} />;
+    case 'facebook':
+      return <Facebook size={20} />;
+    case 'twitter':
+    case 'x':
+      return <Twitter size={20} />;
+    case 'youtube':
+      return <Youtube size={20} />;
+    case 'instagram':
+      return <Instagram size={20} />;
+    default:
+      return <Globe size={20} />;
+  }
+};
+
+const renderCategoryIcon = (iconName: string) => {
+  const name = (iconName || '').toLowerCase();
+  switch (name) {
+    case 'target':
+      return <Target className="text-[#22C55E]" size={20} />;
+    case 'globe':
+      return <Globe className="text-[#22C55E]" size={20} />;
+    case 'code':
+      return <Code className="text-[#22C55E]" size={20} />;
+    case 'barchart3':
+    case 'analytics':
+      return <BarChart3 className="text-[#22C55E]" size={20} />;
+    case 'layers':
+      return <Layers className="text-[#22C55E]" size={20} />;
+    default:
+      return <Cpu className="text-[#22C55E]" size={20} />;
+  }
+};
 
 // Particle Component
 function ParticleBackground() {
@@ -164,22 +216,48 @@ function TypewriterText({ texts }: { texts: string[] }) {
   const [currentText, setCurrentText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
 
+  // Reset index safely if texts list shrinks or changes
   useEffect(() => {
-    const text = texts[currentTextIndex];
+    if (texts && currentTextIndex >= texts.length) {
+      setCurrentTextIndex(0);
+      setCurrentText('');
+      setIsDeleting(false);
+    }
+  }, [texts, currentTextIndex]);
+
+  useEffect(() => {
+    if (!texts || texts.length === 0) {
+      setCurrentText('');
+      return;
+    }
+
+    const safeIndex = currentTextIndex < texts.length ? currentTextIndex : 0;
+    const fullText = texts[safeIndex] || '';
+
+    // If typing is completed, pause for 2 seconds and switch to deleting
+    if (!isDeleting && currentText === fullText) {
+      const timeout = setTimeout(() => setIsDeleting(true), 2000);
+      return () => clearTimeout(timeout);
+    }
+    
+    // If deleting is completed, switch to typing the next word
+    if (isDeleting && currentText === '') {
+      setIsDeleting(false);
+      setCurrentTextIndex((prev) => (prev + 1) % texts.length);
+      return;
+    }
+
+    // Schedule next character update
     const timeout = setTimeout(() => {
-      if (!isDeleting) {
-        setCurrentText(text.slice(0, currentText.length + 1));
-        if (currentText === text) {
-          setTimeout(() => setIsDeleting(true), 2000);
+      setCurrentText((prev) => {
+        if (isDeleting) {
+          return prev.slice(0, -1);
+        } else {
+          if (prev.length >= fullText.length) return fullText;
+          return fullText.slice(0, prev.length + 1);
         }
-      } else {
-        setCurrentText(text.slice(0, currentText.length - 1));
-        if (currentText === '') {
-          setIsDeleting(false);
-          setCurrentTextIndex((prev) => (prev + 1) % texts.length);
-        }
-      }
-    }, isDeleting ? 50 : 100);
+      });
+    }, isDeleting ? 40 : 80);
 
     return () => clearTimeout(timeout);
   }, [currentText, isDeleting, currentTextIndex, texts]);
@@ -258,10 +336,12 @@ function CVModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) 
 function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [cvModalOpen, setCvModalOpen] = useState(false);
+  const [selectedServicePricing, setSelectedServicePricing] = useState<any>(null);
   const mainRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
   const experienceRef = useRef<HTMLDivElement>(null);
+  const projectsRef = useRef<HTMLDivElement>(null);
   const servicesRef = useRef<HTMLDivElement>(null);
   const caseStudiesRef = useRef<HTMLDivElement>(null);
   const certificationsRef = useRef<HTMLDivElement>(null);
@@ -301,6 +381,7 @@ function Home() {
       const sections = [
         { ref: aboutRef, class: '.about-content' },
         { ref: experienceRef, class: '.experience-content' },
+        { ref: projectsRef, class: '.projects-content' },
         { ref: servicesRef, class: '.services-content' },
         { ref: caseStudiesRef, class: '.case-studies-content' },
         { ref: certificationsRef, class: '.certifications-content' },
@@ -433,7 +514,70 @@ function Home() {
     setMobileMenuOpen(false);
   }, []);
 
-  const { personal, about, experience, certifications, services, caseStudies, skills, whyWorkWithMe } = siteConfig;
+  const { personal, hero, about, experience, certifications, services, caseStudies, skills, whyWorkWithMe, education } = siteConfig;
+
+  const refMap: { [key: string]: React.RefObject<HTMLDivElement | null> } = {
+    '#about': aboutRef,
+    '#experience': experienceRef,
+    '#projects': projectsRef,
+    '#services': servicesRef,
+    '#case-studies': caseStudiesRef,
+    '#certifications': certificationsRef,
+    '#skills': skillsRef
+  };
+
+  const renderNavLink = (item: { label: string, href: string }, isMobile = false) => {
+    const isHash = item.href.startsWith('#');
+    const className = isMobile 
+      ? "block w-full text-left text-zinc-400 hover:text-[#22C55E] py-2 hover:pl-2 transition-all"
+      : "text-zinc-400 hover:text-white transition-colors link-hover";
+      
+    if (isHash) {
+      const ref = refMap[item.href];
+      if (ref) {
+        return (
+          <button 
+            key={item.label}
+            onClick={() => scrollToSection(ref)} 
+            className={className}
+          >
+            {item.label}
+          </button>
+        );
+      }
+    }
+    
+    const isExternal = item.href.startsWith('http') || item.href.startsWith('www.');
+    if (isExternal) {
+      return (
+        <a 
+          key={item.label}
+          href={item.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={className}
+          onClick={() => isMobile && setMobileMenuOpen(false)}
+        >
+          {item.label}
+        </a>
+      );
+    }
+
+    const routeClassName = isMobile
+      ? "block w-full text-left text-zinc-400 hover:text-[#22C55E] py-2 hover:pl-2 transition-all"
+      : "text-zinc-400 hover:text-[#22C55E] transition-colors link-hover";
+      
+    return (
+      <Link 
+        key={item.label}
+        to={item.href} 
+        className={routeClassName}
+        onClick={() => isMobile && setMobileMenuOpen(false)}
+      >
+        {item.label}
+      </Link>
+    );
+  };
 
   return (
     <div ref={mainRef} className="min-h-screen bg-[#0A0A0A] text-white overflow-x-hidden relative">
@@ -445,8 +589,12 @@ function Home() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14 sm:h-16">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#22C55E] to-[#16A34A] flex items-center justify-center text-white font-bold text-sm">
-                {personal.initials}
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#22C55E] to-[#16A34A] flex items-center justify-center text-white font-bold text-sm overflow-hidden">
+                {siteConfig.siteIdentity?.logoType === 'image' && siteConfig.siteIdentity?.logoImgPath ? (
+                  <img src={`${siteConfig.siteIdentity.logoImgPath}?v=${CACHE_BUSTER}`} alt="Logo" className="w-full h-full object-cover" />
+                ) : (
+                  personal.initials
+                )}
               </div>
               <span className="text-sm sm:text-base font-semibold tracking-tight hidden sm:block">
                 {personal.shortName}
@@ -455,13 +603,7 @@ function Home() {
             
             {/* Desktop Nav */}
             <div className="hidden lg:flex items-center gap-5 text-sm">
-              <button onClick={() => scrollToSection(aboutRef)} className="text-zinc-400 hover:text-white transition-colors link-hover">About</button>
-              <button onClick={() => scrollToSection(experienceRef)} className="text-zinc-400 hover:text-white transition-colors link-hover">Experience</button>
-              <button onClick={() => scrollToSection(servicesRef)} className="text-zinc-400 hover:text-white transition-colors link-hover">Services</button>
-              <button onClick={() => scrollToSection(caseStudiesRef)} className="text-zinc-400 hover:text-white transition-colors link-hover">Case Studies</button>
-              <button onClick={() => scrollToSection(certificationsRef)} className="text-zinc-400 hover:text-white transition-colors link-hover">Certifications</button>
-              <button onClick={() => scrollToSection(skillsRef)} className="text-zinc-400 hover:text-white transition-colors link-hover">Skills</button>
-              <Link to="/seo-proposal" className="text-zinc-400 hover:text-[#22C55E] transition-colors link-hover">SEO Proposal</Link>
+              {(siteConfig.navigation || []).map(item => renderNavLink(item, false))}
               <a 
                 href={personal.whatsapp}
                 target="_blank"
@@ -485,13 +627,7 @@ function Home() {
         {/* Mobile Menu */}
         <div className={`lg:hidden bg-[#0A0A0A]/95 backdrop-blur-xl border-b border-white/5 transition-all duration-300 ${mobileMenuOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
           <div className="px-4 py-4 space-y-2">
-            <button onClick={() => scrollToSection(aboutRef)} className="block w-full text-left text-zinc-400 hover:text-white py-2 hover:pl-2 transition-all">About</button>
-            <button onClick={() => scrollToSection(experienceRef)} className="block w-full text-left text-zinc-400 hover:text-white py-2 hover:pl-2 transition-all">Experience</button>
-            <button onClick={() => scrollToSection(servicesRef)} className="block w-full text-left text-zinc-400 hover:text-white py-2 hover:pl-2 transition-all">Services</button>
-            <button onClick={() => scrollToSection(caseStudiesRef)} className="block w-full text-left text-zinc-400 hover:text-white py-2 hover:pl-2 transition-all">Case Studies</button>
-            <button onClick={() => scrollToSection(certificationsRef)} className="block w-full text-left text-zinc-400 hover:text-white py-2 hover:pl-2 transition-all">Certifications</button>
-            <button onClick={() => scrollToSection(skillsRef)} className="block w-full text-left text-zinc-400 hover:text-white py-2 hover:pl-2 transition-all">Skills</button>
-            <Link to="/seo-proposal" className="block w-full text-left text-zinc-400 hover:text-[#22C55E] py-2 hover:pl-2 transition-all">SEO Proposal</Link>
+            {(siteConfig.navigation || []).map(item => renderNavLink(item, true))}
             <a 
               href={personal.whatsapp}
               target="_blank"
@@ -542,14 +678,12 @@ function Home() {
                 </button>
               </div>
               <div className="hero-meta mt-8 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 sm:gap-8 text-xs sm:text-sm text-zinc-500">
-                <span className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-[#22C55E] rounded-full animate-pulse"></span>
-                  {personal.location.split(',').slice(-2).join(', ')}
-                </span>
-                <span className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-[#22C55E] rounded-full animate-pulse"></span>
-                  {personal.experience} Years Experience
-                </span>
+                {((hero && hero.metadata) || []).map((meta: string) => (
+                  <span key={meta} className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-[#22C55E] rounded-full animate-pulse"></span>
+                    {meta}
+                  </span>
+                ))}
               </div>
             </div>
 
@@ -562,7 +696,7 @@ function Home() {
                   <div className="absolute inset-0 bg-gradient-to-br from-[#22C55E] to-[#16A34A] rounded-full p-1">
                     <div className="w-full h-full rounded-full overflow-hidden bg-zinc-900">
                       <img 
-                        src="/profile.png" 
+                        src={personal.profileImgPath || "/profile.png"} 
                         alt={personal.name}
                         className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
                       />
@@ -604,7 +738,7 @@ function Home() {
               <div className="relative">
                 <div className="absolute -inset-4 bg-gradient-to-r from-[#22C55E]/10 to-transparent rounded-2xl blur-xl"></div>
                 <img 
-                  src="/profile.png" 
+                  src={(about as any).aboutImgPath || personal.profileImgPath || "/profile.png"} 
                   alt={personal.name}
                   className="relative w-full max-w-sm rounded-2xl border border-zinc-800 shadow-2xl"
                 />
@@ -726,9 +860,59 @@ function Home() {
         </div>
       </section>
 
+      {/* Projects Section */}
+      <section ref={projectsRef} id="projects" className="min-h-screen flex items-center py-20 sm:py-32 px-4 sm:px-6 lg:px-8 relative">
+        <span className="watermark top-1/2 right-0 -translate-y-1/2 translate-x-1/3">04</span>
+        <div className="projects-content max-w-6xl mx-auto w-full relative z-10">
+          <div className="text-center mb-12 sm:mb-16">
+            <span className="inline-block px-4 py-1.5 bg-[#22C55E]/10 border border-[#22C55E]/30 rounded-full text-[#22C55E] text-sm font-medium mb-4">
+              Featured Work
+            </span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4">
+              Selected Projects
+            </h2>
+            <p className="text-zinc-400 text-base sm:text-lg max-w-2xl mx-auto">
+              A curated list of full-stack applications, software tools, and automation systems I have built
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-6">
+            {siteConfig.projects && siteConfig.projects.map((project, index) => (
+              <div 
+                key={index} 
+                className="project-card group bg-gradient-to-br from-zinc-900 to-zinc-950 border border-zinc-800 rounded-2xl p-6 sm:p-8 hover:border-[#22C55E]/50 transition-all duration-300 hover:shadow-xl hover:shadow-[#22C55E]/5 relative overflow-hidden flex flex-col justify-between"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-[#22C55E]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div className="relative">
+                  <div className="w-12 h-12 bg-gradient-to-br from-[#22C55E]/20 to-[#22C55E]/5 rounded-xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                    <Code className="text-[#22C55E]" size={24} />
+                  </div>
+                  <h3 className="text-lg sm:text-xl font-bold mb-3 group-hover:text-[#22C55E] transition-colors">
+                    {project.title}
+                  </h3>
+                  <p className="text-zinc-400 text-sm sm:text-base leading-relaxed mb-6">
+                    {project.description}
+                  </p>
+                </div>
+                <div className="relative flex flex-wrap gap-2 mt-auto">
+                  {project.tags.map((tag, tIndex) => (
+                    <span 
+                      key={tIndex} 
+                      className="text-xs bg-zinc-800/80 text-zinc-300 border border-zinc-700/50 px-3 py-1.5 rounded-full"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Services Section */}
       <section ref={servicesRef} id="services" className="min-h-screen flex items-center py-20 sm:py-32 px-4 sm:px-6 lg:px-8 relative">
-        <span className="watermark top-1/2 right-0 -translate-y-1/2 translate-x-1/3">04</span>
+        <span className="watermark top-1/2 right-0 -translate-y-1/2 translate-x-1/3">05</span>
         <div className="services-content max-w-6xl mx-auto w-full relative z-10">
           <div className="text-center mb-12 sm:mb-16">
             <span className="inline-block px-4 py-1.5 bg-[#22C55E]/10 border border-[#22C55E]/30 rounded-full text-[#22C55E] text-sm font-medium mb-4">
@@ -757,11 +941,20 @@ function Home() {
                   <p className="text-zinc-400 text-sm sm:text-base leading-relaxed mb-4">
                     {service.description}
                   </p>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2 mb-5">
                     {service.tags.map((tag, tIndex) => (
                       <span key={tIndex} className="text-xs bg-zinc-800 text-zinc-300 px-3 py-1.5 rounded-full">{tag}</span>
                     ))}
                   </div>
+                  {service.showPricing && (
+                    <button
+                      onClick={() => setSelectedServicePricing(service)}
+                      className="w-full sm:w-auto px-4 py-2 text-xs font-semibold bg-zinc-800 hover:bg-[#22C55E] text-zinc-200 hover:text-black rounded-xl border border-zinc-700/60 hover:border-[#22C55E] flex items-center justify-center gap-1.5 transition-all active:scale-95 group/btn cursor-pointer"
+                    >
+                      View Pricing & Details
+                      <ArrowUpRight size={12} className="group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
@@ -771,7 +964,7 @@ function Home() {
 
       {/* Case Studies Section */}
       <section ref={caseStudiesRef} id="case-studies" className="min-h-screen flex items-center py-20 sm:py-32 px-4 sm:px-6 lg:px-8 relative">
-        <span className="watermark top-1/2 left-0 -translate-y-1/2 -translate-x-1/4">05</span>
+        <span className="watermark top-1/2 left-0 -translate-y-1/2 -translate-x-1/4">06</span>
         <div className="case-studies-content max-w-6xl mx-auto w-full relative z-10">
           <div className="text-center mb-12 sm:mb-16">
             <span className="inline-block px-4 py-1.5 bg-[#22C55E]/10 border border-[#22C55E]/30 rounded-full text-[#22C55E] text-sm font-medium mb-4">
@@ -793,6 +986,13 @@ function Home() {
                 className={`case-card block text-left group relative overflow-hidden rounded-2xl cursor-pointer ${study.featured ? 'md:row-span-2' : ''}`}
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-zinc-800 to-zinc-900"></div>
+                {study.image && (
+                  <img 
+                    src={study.image} 
+                    alt={study.title} 
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-20 group-hover:opacity-30" 
+                  />
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent z-10"></div>
                 <div className="absolute inset-0 bg-[#22C55E]/5 group-hover:bg-[#22C55E]/10 transition-colors z-[5]"></div>
                 
@@ -836,7 +1036,7 @@ function Home() {
 
       {/* Certifications Section */}
       <section ref={certificationsRef} id="certifications" className="min-h-screen flex items-center py-20 sm:py-32 px-4 sm:px-6 lg:px-8 relative">
-        <span className="watermark top-1/2 right-0 -translate-y-1/2 translate-x-1/4">06</span>
+        <span className="watermark top-1/2 right-0 -translate-y-1/2 translate-x-1/4">07</span>
         <div className="certifications-content max-w-6xl mx-auto w-full relative z-10">
           <div className="text-center mb-12 sm:mb-16">
             <span className="inline-block px-4 py-1.5 bg-[#22C55E]/10 border border-[#22C55E]/30 rounded-full text-[#22C55E] text-sm font-medium mb-4">
@@ -852,15 +1052,36 @@ function Home() {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {certifications.map((cert, index) => (
-              <div key={index} className="cert-card group bg-gradient-to-br from-zinc-900 to-zinc-950 border border-zinc-800 rounded-2xl p-6 hover:border-[#22C55E]/50 transition-all duration-300 relative overflow-hidden">
+              <div key={index} className="cert-card group bg-gradient-to-br from-zinc-900 to-zinc-950 border border-zinc-800 rounded-2xl p-4 hover:border-[#22C55E]/50 transition-all duration-300 relative overflow-hidden flex flex-col justify-between">
                 <div className="absolute inset-0 bg-gradient-to-br from-[#22C55E]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                <div className="relative">
-                  <div className="w-14 h-14 bg-gradient-to-br from-[#22C55E]/20 to-[#22C55E]/5 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                    <Medal className="text-[#22C55E]" size={28} />
+                <div className="relative z-10">
+                  <div className="w-full h-32 bg-zinc-950 rounded-xl overflow-hidden mb-4 border border-zinc-800 relative flex items-center justify-center">
+                    {cert.image ? (
+                      <img 
+                        src={cert.image} 
+                        alt={cert.title} 
+                        className="w-full h-full object-cover group-hover:scale-105 transition-all duration-300 cursor-zoom-in"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          window.open(cert.image, '_blank');
+                        }}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-[#22C55E]/15 to-[#22C55E]/5 flex items-center justify-center">
+                        <Medal className="text-[#22C55E]" size={32} />
+                      </div>
+                    )}
                   </div>
-                  <h3 className="text-base font-semibold mb-2 group-hover:text-[#22C55E] transition-colors">{cert.title}</h3>
-                  <p className="text-zinc-400 text-sm mb-1">{cert.issuer}</p>
-                  <p className="text-[#22C55E] text-sm font-medium">{cert.year}</p>
+                  <h3 className="text-sm sm:text-base font-semibold mb-1.5 group-hover:text-[#22C55E] transition-colors line-clamp-2">{cert.title}</h3>
+                  <p className="text-zinc-400 text-xs sm:text-sm mb-1">{cert.issuer}</p>
+                </div>
+                <div className="relative z-10 mt-2 flex justify-between items-center">
+                  <span className="text-[#22C55E] text-xs sm:text-sm font-medium">{cert.year}</span>
+                  {cert.image && (
+                    <span className="text-[10px] text-zinc-500 group-hover:text-[#22C55E] transition-colors flex items-center gap-1">
+                      View <ExternalLink size={10} />
+                    </span>
+                  )}
                 </div>
               </div>
             ))}
@@ -870,30 +1091,20 @@ function Home() {
           <div className="mt-12 sm:mt-16">
             <h3 className="text-xl sm:text-2xl font-bold mb-6 text-center">Education</h3>
             <div className="grid sm:grid-cols-2 gap-4 sm:gap-6 max-w-3xl mx-auto">
-              <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5 sm:p-6 hover:border-[#22C55E]/30 transition-colors">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 bg-[#22C55E]/10 rounded-lg flex items-center justify-center">
-                    <GraduationCap className="text-[#22C55E]" size={20} />
+              {education && education.map((edu, index) => (
+                <div key={index} className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5 sm:p-6 hover:border-[#22C55E]/30 transition-colors">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 bg-[#22C55E]/10 rounded-lg flex items-center justify-center">
+                      <GraduationCap className="text-[#22C55E]" size={20} />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold">{edu.degree}</h4>
+                      <p className="text-zinc-400 text-sm">{edu.school}</p>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="font-semibold">BBA in Management</h4>
-                    <p className="text-zinc-400 text-sm">Government Sherpur College, Bogura</p>
-                  </div>
+                  <p className="text-[#22C55E] text-sm">{edu.year}</p>
                 </div>
-                <p className="text-[#22C55E] text-sm">Expected 2026</p>
-              </div>
-              <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5 sm:p-6 hover:border-[#22C55E]/30 transition-colors">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 bg-[#22C55E]/10 rounded-lg flex items-center justify-center">
-                    <GraduationCap className="text-[#22C55E]" size={20} />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold">HSC, Business Studies</h4>
-                    <p className="text-zinc-400 text-sm">Bogra Government College</p>
-                  </div>
-                </div>
-                <p className="text-[#22C55E] text-sm">2020 | GPA: 4.50</p>
-              </div>
+              ))}
             </div>
           </div>
         </div>
@@ -901,7 +1112,7 @@ function Home() {
 
       {/* Skills Section */}
       <section ref={skillsRef} id="skills" className="min-h-screen flex items-center py-20 sm:py-32 px-4 sm:px-6 lg:px-8 relative">
-        <span className="watermark top-1/2 left-0 -translate-y-1/2 -translate-x-1/4">07</span>
+        <span className="watermark top-1/2 left-0 -translate-y-1/2 -translate-x-1/4">08</span>
         <div className="skills-content max-w-6xl mx-auto w-full relative z-10">
           <div className="text-center mb-12 sm:mb-16">
             <span className="inline-block px-4 py-1.5 bg-[#22C55E]/10 border border-[#22C55E]/30 rounded-full text-[#22C55E] text-sm font-medium mb-4">
@@ -916,58 +1127,59 @@ function Home() {
           </div>
 
           {/* Skill Categories */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-            <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5">
-              <div className="flex items-center gap-2 mb-4">
-                <Target className="text-[#22C55E]" size={20} />
-                <h3 className="font-semibold">SEO</h3>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-10">
+            {(siteConfig.skillCategories || [
+              {
+                title: "SEO",
+                icon: "Target",
+                items: ["Technical SEO", "On-page SEO", "Off-page SEO", "Keyword Research", "Schema Markup"]
+              },
+              {
+                title: "WordPress & Web",
+                icon: "Globe",
+                items: ["WordPress", "PHP Customization", "HTML/CSS", "JavaScript", "Landing Page Design"]
+              },
+              {
+                title: "Web & Software Dev",
+                icon: "Code",
+                items: [
+                  "Laravel (PHP), Next.js, React",
+                  "PostgreSQL, MySQL",
+                  "RESTful API Design",
+                  "Secure Auth & RBAC",
+                  "Git & GitHub Control",
+                  "n8n Workflow Automation",
+                  "AI Integration (VAPI.ai)"
+                ]
+              },
+              {
+                title: "Analytics",
+                icon: "BarChart3",
+                items: ["Google Analytics", "Google Search Console", "Ahrefs", "SEMrush", "Screaming Frog"]
+              },
+              {
+                title: "Operations",
+                icon: "Layers",
+                items: ["n8n Automation", "Team Leadership", "Project Management", "Process Optimization"]
+              }
+            ]).map((category: any, idx: number) => (
+              <div 
+                key={idx} 
+                className={`bg-zinc-900/50 border border-zinc-800 rounded-xl p-5 ${
+                  category.title === 'Web & Software Dev' ? 'border-[#22C55E]/20 hover:border-[#22C55E]/40 transition-colors' : ''
+                }`}
+              >
+                <div className="flex items-center gap-2 mb-4">
+                  {renderCategoryIcon(category.icon)}
+                  <h3 className="font-semibold">{category.title}</h3>
+                </div>
+                <ul className="space-y-2 text-sm text-zinc-400">
+                  {category.items.map((item: string, itemIdx: number) => (
+                    <li key={itemIdx}>{item}</li>
+                  ))}
+                </ul>
               </div>
-              <ul className="space-y-2 text-sm text-zinc-400">
-                <li>Technical SEO</li>
-                <li>On-page SEO</li>
-                <li>Off-page SEO</li>
-                <li>Keyword Research</li>
-                <li>Schema Markup</li>
-              </ul>
-            </div>
-            <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5">
-              <div className="flex items-center gap-2 mb-4">
-                <Globe className="text-[#22C55E]" size={20} />
-                <h3 className="font-semibold">Web Development</h3>
-              </div>
-              <ul className="space-y-2 text-sm text-zinc-400">
-                <li>WordPress</li>
-                <li>PHP Customization</li>
-                <li>HTML/CSS</li>
-                <li>JavaScript</li>
-                <li>Landing Page Design</li>
-              </ul>
-            </div>
-            <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5">
-              <div className="flex items-center gap-2 mb-4">
-                <BarChart3 className="text-[#22C55E]" size={20} />
-                <h3 className="font-semibold">Analytics</h3>
-              </div>
-              <ul className="space-y-2 text-sm text-zinc-400">
-                <li>Google Analytics</li>
-                <li>Google Search Console</li>
-                <li>Ahrefs</li>
-                <li>SEMrush</li>
-                <li>Screaming Frog</li>
-              </ul>
-            </div>
-            <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5">
-              <div className="flex items-center gap-2 mb-4">
-                <Layers className="text-[#22C55E]" size={20} />
-                <h3 className="font-semibold">Operations</h3>
-              </div>
-              <ul className="space-y-2 text-sm text-zinc-400">
-                <li>n8n Automation</li>
-                <li>Team Leadership</li>
-                <li>Project Management</li>
-                <li>Process Optimization</li>
-              </ul>
-            </div>
+            ))}
           </div>
 
           <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
@@ -985,7 +1197,7 @@ function Home() {
 
       {/* Why Work With Me Section */}
       <section ref={whyRef} id="why" className="min-h-screen flex items-center py-20 sm:py-32 px-4 sm:px-6 lg:px-8 relative">
-        <span className="watermark top-1/2 right-0 -translate-y-1/2 translate-x-1/4">08</span>
+        <span className="watermark top-1/2 right-0 -translate-y-1/2 translate-x-1/4">09</span>
         <div className="why-content max-w-4xl mx-auto w-full relative z-10">
           <div className="text-center mb-12 sm:mb-16">
             <span className="inline-block px-4 py-1.5 bg-[#22C55E]/10 border border-[#22C55E]/30 rounded-full text-[#22C55E] text-sm font-medium mb-4">
@@ -1057,8 +1269,12 @@ function Home() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="text-center md:text-left">
               <div className="flex items-center gap-3 justify-center md:justify-start mb-2">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#22C55E] to-[#16A34A] flex items-center justify-center text-white font-bold">
-                  {personal.initials}
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#22C55E] to-[#16A34A] flex items-center justify-center text-white font-bold overflow-hidden">
+                  {siteConfig.siteIdentity?.logoType === 'image' && siteConfig.siteIdentity?.logoImgPath ? (
+                    <img src={`${siteConfig.siteIdentity.logoImgPath}?v=${CACHE_BUSTER}`} alt="Logo" className="w-full h-full object-cover" />
+                  ) : (
+                    personal.initials
+                  )}
                 </div>
                 <div>
                   <div className="text-lg sm:text-xl font-semibold">{personal.name}</div>
@@ -1067,24 +1283,23 @@ function Home() {
               </div>
             </div>
             <div className="flex items-center gap-4 sm:gap-6">
-              <a 
-                href={personal.whatsapp}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 bg-zinc-800 rounded-full flex items-center justify-center text-zinc-400 hover:text-[#22C55E] hover:bg-zinc-700 transition-all hover:scale-110"
-                aria-label="WhatsApp"
-              >
-                <MessageCircle size={20} />
-              </a>
-              <a 
-                href={personal.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 bg-zinc-800 rounded-full flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-700 transition-all hover:scale-110"
-                aria-label="LinkedIn"
-              >
-                <Linkedin size={20} />
-              </a>
+              {(personal.socials || [
+                { platform: 'WhatsApp', url: personal.whatsapp, icon: 'MessageCircle' },
+                { platform: 'LinkedIn', url: personal.linkedin, icon: 'Linkedin' }
+              ]).map((soc: any, sIdx: number) => (
+                soc.url ? (
+                  <a 
+                    key={sIdx}
+                    href={soc.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 bg-zinc-800 rounded-full flex items-center justify-center text-zinc-400 hover:text-[#22C55E] hover:bg-zinc-700 transition-all hover:scale-110"
+                    aria-label={soc.platform}
+                  >
+                    {renderSocialIcon(soc.icon)}
+                  </a>
+                ) : null
+              ))}
             </div>
           </div>
           <div className="mt-8 pt-8 border-t border-zinc-800/50 text-center text-zinc-600 text-xs sm:text-sm">
@@ -1095,17 +1310,126 @@ function Home() {
 
       {/* CV Modal */}
       <CVModal isOpen={cvModalOpen} onClose={() => setCvModalOpen(false)} />
+
+      {/* Service Pricing Modal */}
+      {selectedServicePricing && (() => {
+        const linkedProposal = ((siteConfig as any).proposals || []).find(
+          (p: any) => p.serviceTitle === selectedServicePricing.title || p.id === (selectedServicePricing as any).proposalId
+        );
+        const targetProposalUrl = linkedProposal 
+          ? `/#/proposal/${linkedProposal.id}` 
+          : `/#/seo-proposal`;
+
+        return (
+          <div 
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm animate-fade-in"
+            onClick={() => setSelectedServicePricing(null)}
+          >
+            <div 
+              className="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-5xl h-[90vh] flex flex-col animate-scale-in"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between p-4 border-b border-zinc-800">
+                <h3 className="text-lg font-semibold flex items-center gap-2 text-white">
+                  <FileText className="text-[#22C55E]" size={20} />
+                  Pricing Plans & Proposal - {selectedServicePricing.title}
+                </h3>
+                <div className="flex items-center gap-2">
+                  <a
+                    href={targetProposalUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-4 py-2 bg-[#22C55E] text-black rounded-lg text-sm font-semibold hover:bg-[#16A34A] transition-colors"
+                  >
+                    <ExternalLink size={16} />
+                    Open in New Tab
+                  </a>
+                  <button
+                    onClick={() => setSelectedServicePricing(null)}
+                    className="w-10 h-10 bg-zinc-800 rounded-lg flex items-center justify-center hover:bg-zinc-700 transition-colors text-white cursor-pointer"
+                  >
+                    <X size={20} />
+                  </button>
+                </div>
+              </div>
+              <div className="flex-1 p-4 bg-zinc-950/40">
+                <iframe
+                  src={targetProposalUrl}
+                  className="w-full h-full rounded-lg border border-zinc-800"
+                  title={`${selectedServicePricing.title} Proposal & Pricing`}
+                />
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }
 
 // Main App Component
 function App() {
+  useEffect(() => {
+    // Set Document Title
+    if (siteConfig.siteIdentity?.title) {
+      document.title = siteConfig.siteIdentity.title;
+    }
+
+    // Set Description
+    if (siteConfig.siteIdentity?.description) {
+      let metaDesc = document.querySelector('meta[name="description"]');
+      if (!metaDesc) {
+        metaDesc = document.createElement('meta');
+        metaDesc.setAttribute('name', 'description');
+        document.head.appendChild(metaDesc);
+      }
+      metaDesc.setAttribute('content', siteConfig.siteIdentity.description);
+    }
+
+    // Set Favicon
+    let favicon = document.getElementById('favicon-link') as HTMLLinkElement | null;
+    if (!favicon) {
+      favicon = document.createElement('link');
+      favicon.id = 'favicon-link';
+      favicon.rel = 'icon';
+      document.head.appendChild(favicon);
+    }
+    if (siteConfig.siteIdentity?.faviconPath) {
+      const originalPath = `${siteConfig.siteIdentity.faviconPath.startsWith('/') ? '' : '/'}${siteConfig.siteIdentity.faviconPath}?v=${CACHE_BUSTER}`;
+      favicon.href = originalPath;
+
+      // Draw the favicon as round dynamically
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        try {
+          const canvas = document.createElement('canvas');
+          canvas.width = 64;
+          canvas.height = 64;
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+            ctx.beginPath();
+            ctx.arc(32, 32, 32, 0, Math.PI * 2);
+            ctx.clip();
+            ctx.drawImage(img, 0, 0, 64, 64);
+            if (favicon) {
+              favicon.href = canvas.toDataURL('image/png');
+            }
+          }
+        } catch (e) {
+          console.error("Failed to render circular favicon dynamically:", e);
+        }
+      };
+      img.src = originalPath;
+    }
+  }, [siteConfig.siteIdentity?.title, siteConfig.siteIdentity?.description, siteConfig.siteIdentity?.faviconPath]);
+
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/seo-proposal" element={<SEOProposal />} />
+        <Route path="/proposal/:id" element={<SEOProposal />} />
         <Route path="/case-study/:slug" element={<CaseStudyDetail />} />
         <Route path="/admin" element={<Admin />} />
       </Routes>

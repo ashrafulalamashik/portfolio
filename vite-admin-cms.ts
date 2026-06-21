@@ -3,8 +3,6 @@ import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
-import { Project, SyntaxKind } from 'ts-morph';
-import { z } from 'zod';
 import { execFile } from 'child_process';
 
 // Load .env variables locally
@@ -43,10 +41,7 @@ const WINDOW_MS = 15 * 60 * 1000;
 const LOCKOUT_MS = 15 * 60 * 1000;
 const rateLimits = new Map<string, RateLimitInfo>();
 
-const saveHeroSchema = z.object({
-  tagline: z.string().min(1).max(200),
-  typewriterTexts: z.array(z.string().min(1).max(100)).min(1).max(10),
-});
+// Input schemas removed to avoid duplicate Zod library issues at runtime
 
 function getCookie(cookieHeader: string | undefined, name: string): string | null {
   if (!cookieHeader) return null;
@@ -158,6 +153,14 @@ export function adminCmsPlugin(): Plugin {
     configureServer(server) {
       server.middlewares.use(async (req, res, next) => {
         const url = req.url || '';
+        const pathname = url.split('?')[0];
+
+        // Intercept direct /admin requests and redirect to hash route /#/admin
+        if (pathname === '/admin' || pathname === '/admin/') {
+          res.writeHead(302, { Location: '/#/admin' });
+          res.end();
+          return;
+        }
 
         // Route: POST /api/admin/login
         if (url === '/api/admin/login' && req.method === 'POST') {
@@ -272,29 +275,24 @@ export function adminCmsPlugin(): Plugin {
             }
           }
 
-          // Route: GET /api/admin/hero (protected)
-          if (url === '/api/admin/hero' && req.method === 'GET') {
+          // Route: GET /api/admin/config (protected)
+          if (url === '/api/admin/config' && req.method === 'GET') {
             try {
-              const project = new Project();
-              const sourceFile = project.addSourceFileAtPath(path.resolve(process.cwd(), 'src/config/siteConfig.ts'));
-              const siteConfigVariable = sourceFile.getVariableDeclaration('siteConfig');
-              if (!siteConfigVariable) throw new Error('siteConfig variable not found');
-
-              const initializer = siteConfigVariable.getInitializerIfKindOrThrow(SyntaxKind.ObjectLiteralExpression);
+              const configPath = path.resolve(process.cwd(), 'src/config/siteConfig.ts');
               
-              const personalProp = initializer.getPropertyOrThrow('personal').asKindOrThrow(SyntaxKind.PropertyAssignment);
-              const personalObject = personalProp.getInitializerIfKindOrThrow(SyntaxKind.ObjectLiteralExpression);
-              const taglineProp = personalObject.getPropertyOrThrow('tagline').asKindOrThrow(SyntaxKind.PropertyAssignment);
-              const tagline = taglineProp.getInitializerIfKindOrThrow(SyntaxKind.StringLiteral).getLiteralValue();
+              // Invalidate cache before loading to ensure we load the fresh content on disk
+              const modules = server.moduleGraph.getModulesByFile(configPath);
+              if (modules) {
+                for (const mod of modules) {
+                  server.moduleGraph.invalidateModule(mod);
+                }
+              }
 
-              const heroProp = initializer.getPropertyOrThrow('hero').asKindOrThrow(SyntaxKind.PropertyAssignment);
-              const heroObject = heroProp.getInitializerIfKindOrThrow(SyntaxKind.ObjectLiteralExpression);
-              const typewriterTextsProp = heroObject.getPropertyOrThrow('typewriterTexts').asKindOrThrow(SyntaxKind.PropertyAssignment);
-              const typewriterTextsArray = typewriterTextsProp.getInitializerIfKindOrThrow(SyntaxKind.ArrayLiteralExpression);
-              const typewriterTexts = typewriterTextsArray.getElements().map(el => el.asKindOrThrow(SyntaxKind.StringLiteral).getLiteralValue());
+              const moduleExports = await server.ssrLoadModule(configPath);
+              const currentSiteConfig = moduleExports.siteConfig || moduleExports.default;
 
               res.writeHead(200, { 'Content-Type': 'application/json' });
-              res.end(JSON.stringify({ tagline, typewriterTexts }));
+              res.end(JSON.stringify(currentSiteConfig));
               return;
             } catch (e: any) {
               res.writeHead(500, { 'Content-Type': 'application/json' });
@@ -303,48 +301,153 @@ export function adminCmsPlugin(): Plugin {
             }
           }
 
-          // Route: POST /api/admin/save-hero (protected + csrf)
-          if (url === '/api/admin/save-hero' && req.method === 'POST') {
+          // Route: POST /api/admin/save-config (protected + csrf)
+          if (url === '/api/admin/save-config' && req.method === 'POST') {
             try {
               const body = await getRequestBody(req);
-              const parsed = saveHeroSchema.safeParse(body);
-              if (!parsed.success) {
+              
+              if (!body || typeof body !== 'object') {
                 res.writeHead(400, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ error: 'Validation failed', details: parsed.error.flatten() }));
+                res.end(JSON.stringify({ error: 'Invalid config format: body must be an object' }));
+                return;
+              }
+              if (!body.personal || typeof body.personal !== 'object') {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Invalid config format: personal info is required' }));
                 return;
               }
 
-              const { tagline, typewriterTexts } = parsed.data;
+              const json = JSON.stringify(body, null, 2);
+              const fileContent = `// Site Configuration - Edit this file to update content easily
+// No need to modify component files
 
-              // Write to siteConfig.ts via ts-morph AST edits
-              const project = new Project();
-              const sourceFile = project.addSourceFileAtPath(path.resolve(process.cwd(), 'src/config/siteConfig.ts'));
-              const siteConfigVariable = sourceFile.getVariableDeclaration('siteConfig');
-              if (!siteConfigVariable) throw new Error('siteConfig variable not found');
+export const siteConfig = ${json};
 
-              const initializer = siteConfigVariable.getInitializerIfKindOrThrow(SyntaxKind.ObjectLiteralExpression);
+export default siteConfig;
+`;
+              const configPath = path.resolve(process.cwd(), 'src/config/siteConfig.ts');
+              fs.writeFileSync(configPath, fileContent, 'utf-8');
 
-              // Set tagline
-              const personalProp = initializer.getPropertyOrThrow('personal').asKindOrThrow(SyntaxKind.PropertyAssignment);
-              const personalObject = personalProp.getInitializerIfKindOrThrow(SyntaxKind.ObjectLiteralExpression);
-              const taglineProp = personalObject.getPropertyOrThrow('tagline').asKindOrThrow(SyntaxKind.PropertyAssignment);
-              taglineProp.setInitializer(JSON.stringify(tagline));
-
-              // Set typewriterTexts
-              const heroProp = initializer.getPropertyOrThrow('hero').asKindOrThrow(SyntaxKind.PropertyAssignment);
-              const heroObject = heroProp.getInitializerIfKindOrThrow(SyntaxKind.ObjectLiteralExpression);
-              const typewriterTextsProp = heroObject.getPropertyOrThrow('typewriterTexts').asKindOrThrow(SyntaxKind.PropertyAssignment);
-              const arrayInitializer = `[\n    ${typewriterTexts.map(t => JSON.stringify(t)).join(',\n    ')}\n  ]`;
-              typewriterTextsProp.setInitializer(arrayInitializer);
-
-              sourceFile.saveSync();
+              // Invalidate Vite's module cache for siteConfig.ts
+              const modules = server.moduleGraph.getModulesByFile(configPath);
+              if (modules) {
+                for (const mod of modules) {
+                  server.moduleGraph.invalidateModule(mod);
+                }
+              }
 
               res.writeHead(200, { 'Content-Type': 'application/json' });
-              res.end(JSON.stringify({ tagline, typewriterTexts }));
+              res.end(JSON.stringify({ success: true, config: body }));
+              return;
+            } catch (e: any) {
+              console.error('CRITICAL ERROR in save-config:', e);
+              res.writeHead(500, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ error: 'Failed to write siteConfig.ts: ' + e.message }));
+              return;
+            }
+          }
+
+          // Route: POST /api/admin/upload-file (protected + csrf)
+          if (url === '/api/admin/upload-file' && req.method === 'POST') {
+            try {
+              const body = await getRequestBody(req);
+              const { filename, base64Data } = body;
+              if (typeof filename !== 'string' || typeof base64Data !== 'string') {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Validation failed: filename and base64Data must be strings' }));
+                return;
+              }
+
+              const cleanFilename = path.basename(filename);
+              
+              const ext = path.extname(cleanFilename).toLowerCase();
+              const allowedExts = ['.pdf', '.png', '.jpg', '.jpeg', '.svg', '.webp', '.ico'];
+              if (!allowedExts.includes(ext)) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Unsupported file type. Allowed extensions: ' + allowedExts.join(', ') }));
+                return;
+              }
+
+              const base64Content = base64Data.replace(/^data:.*?;base64,/, '');
+              const buffer = Buffer.from(base64Content, 'base64');
+
+              const publicDir = path.resolve(process.cwd(), 'public');
+              if (!fs.existsSync(publicDir)) {
+                fs.mkdirSync(publicDir, { recursive: true });
+              } else {
+                // Delete existing file case-insensitively so Windows respects the new file case
+                const files = fs.readdirSync(publicDir);
+                const lowerFilename = cleanFilename.toLowerCase();
+                const matchedFile = files.find(f => f.toLowerCase() === lowerFilename);
+                if (matchedFile) {
+                  try {
+                    fs.unlinkSync(path.resolve(publicDir, matchedFile));
+                  } catch (err) {
+                    console.error('Failed to remove case-mismatched file:', err);
+                  }
+                }
+              }
+
+              const targetPath = path.resolve(publicDir, cleanFilename);
+              fs.writeFileSync(targetPath, buffer);
+
+              res.writeHead(200, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ success: true, filePath: cleanFilename }));
               return;
             } catch (e: any) {
               res.writeHead(500, { 'Content-Type': 'application/json' });
-              res.end(JSON.stringify({ error: 'Failed to write siteConfig.ts: ' + e.message }));
+              res.end(JSON.stringify({ error: 'Failed to upload file: ' + e.message }));
+              return;
+            }
+          }
+
+          // Route: POST /api/admin/change-passcode (protected + csrf)
+          if (url === '/api/admin/change-passcode' && req.method === 'POST') {
+            try {
+              const body = await getRequestBody(req);
+              const { newPasscode } = body;
+              if (typeof newPasscode !== 'string' || newPasscode.trim().length < 4) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Passcode must be at least 4 characters long.' }));
+                return;
+              }
+
+              const salt = bcrypt.genSaltSync(10);
+              const newHash = bcrypt.hashSync(newPasscode, salt);
+
+              // Read, modify, and write .env file
+              const envPath = path.resolve(process.cwd(), '.env');
+              let envContent = '';
+              if (fs.existsSync(envPath)) {
+                envContent = fs.readFileSync(envPath, 'utf-8');
+              }
+
+              const lines = envContent.split('\n');
+              let found = false;
+              const updatedLines = lines.map(line => {
+                const trimmed = line.trim();
+                if (trimmed.startsWith('ADMIN_PASSCODE_HASH=')) {
+                  found = true;
+                  return `ADMIN_PASSCODE_HASH=${newHash}`;
+                }
+                return line;
+              });
+
+              if (!found) {
+                updatedLines.push(`ADMIN_PASSCODE_HASH=${newHash}`);
+              }
+
+              fs.writeFileSync(envPath, updatedLines.join('\n'), 'utf-8');
+
+              // Update process.env for instant effect
+              process.env.ADMIN_PASSCODE_HASH = newHash;
+
+              res.writeHead(200, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ success: true, message: 'Passcode changed successfully! Take effect instantly.' }));
+              return;
+            } catch (e: any) {
+              res.writeHead(500, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ error: 'Failed to change passcode: ' + e.message }));
               return;
             }
           }

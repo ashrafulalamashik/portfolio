@@ -10,10 +10,12 @@ import {
   Clock,
   FileText
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import siteConfig from '../config/siteConfig';
 
 gsap.registerPlugin(ScrollTrigger);
+
+const CACHE_BUSTER = Date.now();
 
 // Particle Component
 function ParticleBackground() {
@@ -157,7 +159,16 @@ export default function SEOProposal() {
     return () => ctx.revert();
   }, []);
 
-  const { seoProposal, personal } = siteConfig;
+  const { id } = useParams<{ id: string }>();
+  const proposalId = id || 'seo-proposal';
+  const { proposals, seoProposal: oldSeoProposal, personal } = siteConfig as any;
+
+  const proposal = (proposals || []).find((p: any) => p.id === proposalId) || {
+    title: oldSeoProposal?.title || 'SEO Proposal',
+    subtitle: oldSeoProposal?.subtitle || 'Choose the plan that fits your business goals',
+    plans: oldSeoProposal?.plans || [],
+    paymentTerms: oldSeoProposal?.paymentTerms || []
+  };
 
   return (
     <div ref={mainRef} className="min-h-screen bg-[#0A0A0A] text-white overflow-x-hidden relative">
@@ -169,8 +180,12 @@ export default function SEOProposal() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14 sm:h-16">
             <Link to="/" className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#22C55E] to-[#16A34A] flex items-center justify-center text-white font-bold text-sm">
-                {personal.initials}
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#22C55E] to-[#16A34A] flex items-center justify-center text-white font-bold text-sm overflow-hidden">
+                {siteConfig.siteIdentity?.logoType === 'image' && siteConfig.siteIdentity?.logoImgPath ? (
+                  <img src={`${siteConfig.siteIdentity.logoImgPath}?v=${CACHE_BUSTER}`} alt="Logo" className="w-full h-full object-cover" />
+                ) : (
+                  personal.initials
+                )}
               </div>
               <span className="text-sm sm:text-base font-semibold tracking-tight hidden sm:block">
                 {personal.shortName}
@@ -195,10 +210,10 @@ export default function SEOProposal() {
             Professional SEO Services
           </span>
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4 sm:mb-6">
-            {seoProposal.title}
+            {proposal.title}
           </h1>
           <p className="text-zinc-400 text-base sm:text-lg md:text-xl max-w-2xl mx-auto">
-            {seoProposal.subtitle}
+            {proposal.subtitle}
           </p>
         </div>
       </section>
@@ -206,7 +221,7 @@ export default function SEOProposal() {
       {/* Pricing Plans */}
       <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 relative">
         <div className="plans-grid max-w-7xl mx-auto grid md:grid-cols-3 gap-6 sm:gap-8 relative z-10">
-          {seoProposal.plans.map((plan, index) => (
+          {proposal.plans.map((plan: any, index: number) => (
             <div
               key={index}
               className={`plan-card relative bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-2xl p-6 sm:p-8 border transition-all duration-300 ${
@@ -234,7 +249,7 @@ export default function SEOProposal() {
               </div>
 
               <div className="space-y-3 mb-8">
-                {plan.features.map((feature, fIndex) => (
+                {plan.features.map((feature: any, fIndex: number) => (
                   <div key={fIndex} className="flex items-start gap-3">
                     <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
                       plan.highlighted ? 'bg-[#22C55E]/20' : 'bg-zinc-800'
@@ -273,7 +288,7 @@ export default function SEOProposal() {
             </div>
 
             <div className="grid sm:grid-cols-2 gap-4">
-              {seoProposal.paymentTerms.map((term, index) => (
+              {proposal.paymentTerms.map((term: any, index: number) => (
                 <div key={index} className="flex items-center gap-3">
                   <div className="w-8 h-8 bg-zinc-800 rounded-lg flex items-center justify-center flex-shrink-0">
                     {index === 0 && <Clock size={14} className="text-zinc-400" />}
