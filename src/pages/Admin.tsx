@@ -24,8 +24,11 @@ import {
   GraduationCap,
   Upload,
   Chrome,
-  Sliders
+  Sliders,
+  FileText
 } from 'lucide-react';
+import { blogConfig as initialBlogConfig } from '../config/blogConfig';
+import type { BlogPost } from '../types/blog';
 
 type TabType = 
   | 'general' 
@@ -41,7 +44,8 @@ type TabType =
   | 'skills' 
   | 'why' 
   | 'seo'
-  | 'options';
+  | 'options'
+  | 'blog';
 
 export default function Admin() {
   // If production environment, strictly block and redirect to home page
@@ -66,6 +70,22 @@ export default function Admin() {
   const [newPasscode, setNewPasscode] = useState('');
   const [isChangingPasscode, setIsChangingPasscode] = useState(false);
   const [selectedProposalId, setSelectedProposalId] = useState<string>('seo-proposal');
+
+  // Blog management states
+  const [posts, setPosts] = useState<BlogPost[]>(initialBlogConfig);
+  const [isEditingPost, setIsEditingPost] = useState(false);
+  const [editingPostId, setEditingPostId] = useState<string | null>(null);
+  
+  // Blog editor form states
+  const [postTitle, setPostTitle] = useState('');
+  const [postSlug, setPostSlug] = useState('');
+  const [postLang, setPostLang] = useState<'en' | 'bn'>('en');
+  const [postDate, setPostDate] = useState('');
+  const [postTags, setPostTags] = useState('');
+  const [postExcerpt, setPostExcerpt] = useState('');
+  const [postContent, setPostContent] = useState('');
+  const [postFeatured, setPostFeatured] = useState(false);
+  const [postPublished, setPostPublished] = useState(false);
 
   // Clear messages after a timeout
   useEffect(() => {
@@ -398,6 +418,193 @@ export default function Admin() {
     }
   };
 
+  // Blog Handler Functions
+  const getTodayDateString = () => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  };
+
+  const handleTitleBlur = () => {
+    if (!postSlug.trim() && postTitle.trim()) {
+      setPostSlug(postTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''));
+    }
+  };
+
+  const handleOpenAddNewPost = () => {
+    setEditingPostId(null);
+    setPostTitle('');
+    setPostSlug('');
+    setPostLang('en');
+    setPostDate(getTodayDateString());
+    setPostTags('');
+    setPostExcerpt('');
+    setPostContent('');
+    setPostFeatured(false);
+    setPostPublished(false);
+    setIsEditingPost(true);
+  };
+
+  const handleOpenEditPost = (post: BlogPost) => {
+    setEditingPostId(post.id);
+    setPostTitle(post.title);
+    setPostSlug(post.slug);
+    setPostLang(post.lang);
+    setPostDate(post.date);
+    setPostTags(post.tags ? post.tags.join(', ') : '');
+    setPostExcerpt(post.excerpt || '');
+    setPostContent(post.content || '');
+    setPostFeatured(post.featured || false);
+    setPostPublished(post.published || false);
+    setIsEditingPost(true);
+  };
+
+  const handleSavePost = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!postTitle.trim()) {
+      setErrorMessage('Post Title is required.');
+      return;
+    }
+
+    let finalSlug = postSlug.trim();
+    if (!finalSlug) {
+      finalSlug = postTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    }
+
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(finalSlug)) {
+      setErrorMessage('Slug must be lowercase letters, numbers, and hyphens only.');
+      return;
+    }
+
+    const tagsArray = postTags.split(',').map(t => t.trim()).filter(Boolean);
+
+    const newPost: BlogPost = {
+      id: editingPostId || `post-${Date.now()}`,
+      slug: finalSlug,
+      title: postTitle.trim(),
+      excerpt: postExcerpt.trim(),
+      content: postContent,
+      date: postDate || getTodayDateString(),
+      lang: postLang,
+      tags: tagsArray,
+      featured: postFeatured,
+      published: postPublished
+    };
+
+    let updatedPosts: BlogPost[];
+    if (editingPostId) {
+      if (posts.some(p => p.slug === finalSlug && p.id !== editingPostId)) {
+        setErrorMessage('Another post already uses this slug.');
+        return;
+      }
+      updatedPosts = posts.map(p => p.id === editingPostId ? newPost : p);
+    } else {
+      if (posts.some(p => p.slug === finalSlug)) {
+        setErrorMessage('Another post already uses this slug.');
+        return;
+      }
+      updatedPosts = [newPost, ...posts];
+    }
+
+    setIsLoading(true);
+    setErrorMessage('');
+    setSuccessMessage('');
+
+    try {
+      const res = await fetch('/api/admin/save-blog', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken || '',
+        },
+        body: JSON.stringify({ posts: updatedPosts })
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to save blog post.');
+      }
+
+      setPosts(updatedPosts);
+      setIsEditingPost(false);
+      setEditingPostId(null);
+      setSuccessMessage('Blog draft saved successfully!');
+      setHasSaved(true);
+    } catch (err: any) {
+      setErrorMessage(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDeletePost = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this blog post?')) return;
+
+    const updatedPosts = posts.filter(p => p.id !== id);
+
+    setIsLoading(true);
+    setErrorMessage('');
+    setSuccessMessage('');
+
+    try {
+      const res = await fetch('/api/admin/save-blog', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken || '',
+        },
+        body: JSON.stringify({ posts: updatedPosts })
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to delete blog post.');
+      }
+
+      setPosts(updatedPosts);
+      setSuccessMessage('Blog post deleted successfully!');
+      setHasSaved(true);
+    } catch (err: any) {
+      setErrorMessage(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleTogglePublish = async (post: BlogPost) => {
+    const updatedPosts = posts.map(p => p.id === post.id ? { ...p, published: !p.published } : p);
+
+    setIsLoading(true);
+    setErrorMessage('');
+    setSuccessMessage('');
+
+    try {
+      const res = await fetch('/api/admin/save-blog', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken || '',
+        },
+        body: JSON.stringify({ posts: updatedPosts })
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to update post status.');
+      }
+
+      setPosts(updatedPosts);
+      setSuccessMessage(`Post "${post.title}" ${!post.published ? 'published' : 'unpublished'} successfully!`);
+      setHasSaved(true);
+    } catch (err: any) {
+      setErrorMessage(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   // Helper functions for state manipulation
   const updatePersonal = (field: string, value: string) => {
     setConfig((prev: any) => ({
@@ -680,6 +887,12 @@ export default function Admin() {
                   className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl transition-all w-full text-left whitespace-nowrap ${activeTab === 'options' ? 'bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/20' : 'text-zinc-400 hover:text-white hover:bg-zinc-850'}`}
                 >
                   <Sliders size={16} /> Options / Settings
+                </button>
+                <button 
+                  onClick={() => setActiveTab('blog')} 
+                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl transition-all w-full text-left whitespace-nowrap ${activeTab === 'blog' ? 'bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/20' : 'text-zinc-400 hover:text-white hover:bg-zinc-850'}`}
+                >
+                  <FileText size={16} /> Blog Posts
                 </button>
               </nav>
             </div>
@@ -3633,6 +3846,266 @@ export default function Admin() {
                           </button>
                         </div>
                       </div>
+                    </div>
+                  )}
+
+                  {/* TAB CONTENT: BLOG POSTS */}
+                  {activeTab === 'blog' && (
+                    <div className="space-y-6 animate-fade-in">
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <h2 className="text-lg font-bold text-white">Blog Posts Manager</h2>
+                          <p className="text-xs text-zinc-400 font-medium">Create, edit, and publish posts to your site blog.</p>
+                        </div>
+                        {!isEditingPost && (
+                          <button
+                            type="button"
+                            onClick={handleOpenAddNewPost}
+                            className="bg-[#22C55E] hover:bg-[#16A34A] text-black font-semibold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition-all shadow-md cursor-pointer"
+                          >
+                            <Plus size={14} /> Add New Post
+                          </button>
+                        )}
+                      </div>
+
+                      {isEditingPost ? (
+                        <form onSubmit={handleSavePost} className="p-6 bg-zinc-950/60 border border-zinc-800/80 rounded-2xl space-y-5">
+                          <div className="border-b border-zinc-800 pb-3 mb-4">
+                            <h3 className="text-sm font-semibold text-white">
+                              {editingPostId ? 'Edit Blog Post' : 'Add New Blog Post'}
+                            </h3>
+                          </div>
+
+                          <div className="grid sm:grid-cols-2 gap-4">
+                            {/* Title */}
+                            <div className="space-y-1 sm:col-span-2">
+                              <label className="text-xs text-zinc-400 font-semibold uppercase">Post Title <span className="text-red-500">*</span></label>
+                              <input
+                                type="text"
+                                maxLength={200}
+                                value={postTitle}
+                                onChange={(e) => setPostTitle(e.target.value)}
+                                onBlur={handleTitleBlur}
+                                placeholder="Enter article title..."
+                                className="w-full bg-zinc-900 border border-zinc-850 focus:border-[#22C55E] rounded-xl px-3 py-2 text-sm outline-none transition-all text-white"
+                                required
+                              />
+                            </div>
+
+                            {/* Slug */}
+                            <div className="space-y-1">
+                              <label className="text-xs text-zinc-400 font-semibold uppercase">Slug (URL Path)</label>
+                              <input
+                                type="text"
+                                maxLength={100}
+                                value={postSlug}
+                                onChange={(e) => setPostSlug(e.target.value)}
+                                placeholder="auto-generated-from-title-on-blur"
+                                className="w-full bg-zinc-900 border border-zinc-850 focus:border-[#22C55E] rounded-xl px-3 py-2 text-sm outline-none transition-all text-white font-mono"
+                              />
+                            </div>
+
+                            {/* Date */}
+                            <div className="space-y-1">
+                              <label className="text-xs text-zinc-400 font-semibold uppercase">Publish Date</label>
+                              <input
+                                type="date"
+                                value={postDate}
+                                onChange={(e) => setPostDate(e.target.value)}
+                                className="w-full bg-zinc-900 border border-zinc-850 focus:border-[#22C55E] rounded-xl px-3 py-2 text-sm outline-none transition-all text-white"
+                              />
+                            </div>
+
+                            {/* Language */}
+                            <div className="space-y-1">
+                              <label className="text-xs text-zinc-400 font-semibold uppercase">Language</label>
+                              <div className="flex bg-zinc-900 border border-zinc-850 rounded-xl p-1 w-full max-w-[200px]">
+                                <button
+                                  type="button"
+                                  onClick={() => setPostLang('en')}
+                                  className={`flex-1 py-1 rounded-lg text-xs font-semibold transition-all ${
+                                    postLang === 'en' ? 'bg-[#22C55E] text-black' : 'text-zinc-400 hover:text-white'
+                                  }`}
+                                >
+                                  🇬🇧 EN
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => setPostLang('bn')}
+                                  className={`flex-1 py-1 rounded-lg text-xs font-semibold transition-all ${
+                                    postLang === 'bn' ? 'bg-[#22C55E] text-black' : 'text-zinc-400 hover:text-white'
+                                  }`}
+                                  style={{ fontFamily: "'Hind Siliguri', sans-serif" }}
+                                >
+                                  🇧🇩 বাংলা
+                                </button>
+                              </div>
+                            </div>
+
+                            {/* Tags */}
+                            <div className="space-y-1">
+                              <label className="text-xs text-zinc-400 font-semibold uppercase">Tags (comma-separated)</label>
+                              <input
+                                type="text"
+                                value={postTags}
+                                onChange={(e) => setPostTags(e.target.value)}
+                                placeholder="e.g. SEO, Technical, Next.js"
+                                className="w-full bg-zinc-900 border border-zinc-850 focus:border-[#22C55E] rounded-xl px-3 py-2 text-sm outline-none transition-all text-white"
+                              />
+                            </div>
+                          </div>
+
+                          {/* Excerpt */}
+                          <div className="space-y-1">
+                            <div className="flex justify-between items-center">
+                              <label className="text-xs text-zinc-400 font-semibold uppercase">Excerpt (Short Description)</label>
+                              <span className="text-[10px] text-zinc-500">{postExcerpt.length}/500 chars</span>
+                            </div>
+                            <textarea
+                              maxLength={500}
+                              value={postExcerpt}
+                              onChange={(e) => setPostExcerpt(e.target.value)}
+                              placeholder="Describe what the post is about (displayed in listings)..."
+                              rows={3}
+                              className="w-full bg-zinc-900 border border-zinc-850 focus:border-[#22C55E] rounded-xl px-3 py-2 text-sm outline-none transition-all text-white resize-y"
+                            />
+                          </div>
+
+                          {/* Content */}
+                          <div className="space-y-1">
+                            <label className="text-xs text-zinc-400 font-semibold uppercase block">Post Content (Markdown Supported)</label>
+                            <span className="text-[10px] text-zinc-500 block mb-1">
+                              Markdown supported: **bold**, *italic*, ## headings, `code`, lists, links.
+                            </span>
+                            {/* SECURITY NOTE: Rendered client-side by react-markdown with remarkGfm only (no rehype-raw). Safely escapes script tags. */}
+                            <textarea
+                              value={postContent}
+                              onChange={(e) => setPostContent(e.target.value)}
+                              placeholder="Write your article in Markdown..."
+                              rows={12}
+                              style={{ minHeight: '300px' }}
+                              className="w-full bg-zinc-900 border border-zinc-850 focus:border-[#22C55E] rounded-xl px-3 py-2 text-sm outline-none transition-all text-white font-mono resize-y"
+                              required
+                            />
+                          </div>
+
+                          {/* Toggles */}
+                          <div className="flex flex-wrap gap-6 pt-2">
+                            <label className="flex items-center gap-2 cursor-pointer select-none">
+                              <input
+                                type="checkbox"
+                                checked={postFeatured}
+                                onChange={(e) => setPostFeatured(e.target.checked)}
+                                className="w-4 h-4 accent-[#22C55E] rounded border-zinc-800"
+                              />
+                              <span className="text-xs text-zinc-300 font-semibold uppercase">Featured Post</span>
+                            </label>
+
+                            <label className="flex items-center gap-2 cursor-pointer select-none">
+                              <input
+                                type="checkbox"
+                                checked={postPublished}
+                                onChange={(e) => setPostPublished(e.target.checked)}
+                                className="w-4 h-4 accent-[#22C55E] rounded border-zinc-800"
+                              />
+                              <span className="text-xs text-zinc-300 font-semibold uppercase">Publish Immediately</span>
+                            </label>
+                          </div>
+
+                          {/* Form Actions */}
+                          <div className="flex gap-3 pt-4 border-t border-zinc-800">
+                            <button
+                              type="submit"
+                              disabled={isLoading}
+                              className="bg-[#22C55E] hover:bg-[#16A34A] text-black font-semibold px-5 py-2.5 rounded-xl text-xs flex items-center gap-1.5 transition-all disabled:opacity-50 cursor-pointer"
+                            >
+                              {isLoading ? <Loader2 className="animate-spin" size={14} /> : <Save size={14} />}
+                              Save Draft
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setIsEditingPost(false);
+                                setEditingPostId(null);
+                              }}
+                              className="bg-zinc-800 hover:bg-zinc-700 text-white font-semibold px-5 py-2.5 rounded-xl text-xs transition-all"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </form>
+                      ) : (
+                        <div className="bg-zinc-950/60 border border-zinc-800/80 rounded-2xl overflow-hidden backdrop-blur-sm">
+                          {posts.length > 0 ? (
+                            <div className="overflow-x-auto">
+                              <table className="w-full text-left border-collapse">
+                                <thead>
+                                  <tr className="border-b border-zinc-805 bg-zinc-900/30 text-zinc-400 text-[10px] font-bold uppercase tracking-wider">
+                                    <th className="px-5 py-4">Title</th>
+                                    <th className="px-5 py-4">Date</th>
+                                    <th className="px-5 py-4">Language</th>
+                                    <th className="px-5 py-4">Status</th>
+                                    <th className="px-5 py-4 text-right">Actions</th>
+                                  </tr>
+                                </thead>
+                                <tbody className="divide-y divide-zinc-850 text-sm">
+                                  {posts.map(post => (
+                                    <tr key={post.id} className="hover:bg-zinc-900/10 transition-colors">
+                                      <td className="px-5 py-4 font-semibold text-white">
+                                        <div className="max-w-[250px] truncate" title={post.title}>
+                                          {post.title}
+                                        </div>
+                                      </td>
+                                      <td className="px-5 py-4 text-zinc-400 font-mono text-xs">
+                                        {post.date}
+                                      </td>
+                                      <td className="px-5 py-4">
+                                        <span className="bg-zinc-900 border border-zinc-800 text-zinc-300 text-xs px-2.5 py-0.5 rounded-full">
+                                          {post.lang === 'bn' ? '🇧🇩 বাংলা' : '🇬🇧 EN'}
+                                        </span>
+                                      </td>
+                                      <td className="px-5 py-4">
+                                        <label className="flex items-center gap-2 cursor-pointer select-none">
+                                          <input
+                                            type="checkbox"
+                                            checked={post.published}
+                                            onChange={() => handleTogglePublish(post)}
+                                            className="w-4 h-4 accent-[#22C55E] rounded border-zinc-800"
+                                          />
+                                          <span className={`text-xs ${post.published ? 'text-[#22C55E]' : 'text-zinc-500'}`}>
+                                            {post.published ? 'Published' : 'Draft'}
+                                          </span>
+                                        </label>
+                                      </td>
+                                      <td className="px-5 py-4 text-right space-x-2">
+                                        <button
+                                          type="button"
+                                          onClick={() => handleOpenEditPost(post)}
+                                          className="text-zinc-400 hover:text-white bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 px-3 py-1 rounded-lg text-xs transition-colors"
+                                        >
+                                          Edit
+                                        </button>
+                                        <button
+                                          type="button"
+                                          onClick={() => handleDeletePost(post.id)}
+                                          className="text-red-400 hover:text-red-300 bg-red-950/20 hover:bg-red-950/40 border border-red-900/30 px-3 py-1 rounded-lg text-xs transition-colors"
+                                        >
+                                          Delete
+                                        </button>
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          ) : (
+                            <div className="text-center py-12">
+                              <p className="text-zinc-500 text-sm">No posts yet. Click "Add New Post" to get started.</p>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>

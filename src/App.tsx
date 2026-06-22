@@ -42,6 +42,8 @@ import siteConfig from './config/siteConfig';
 const SEOProposal = lazy(() => import('./pages/SEOProposal'));
 const CaseStudyDetail = lazy(() => import('./pages/CaseStudyDetail'));
 const Admin = lazy(() => import('./pages/Admin'));
+const Blog = lazy(() => import('./pages/Blog'));
+const BlogPost = lazy(() => import('./pages/BlogPost'));
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -1478,6 +1480,8 @@ function App() {
           <Route path="/proposal/:id" element={<SEOProposal />} />
           <Route path="/case-study/:slug" element={<CaseStudyDetail />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
         </Routes>
       </Suspense>
     </Router>

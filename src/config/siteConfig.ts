@@ -730,6 +730,10 @@ export const siteConfig = {
       "href": "#case-studies"
     },
     {
+      "label": "Blog",
+      "href": "/blog"
+    },
+    {
       "label": "Certifications",
       "href": "#certifications"
     },
