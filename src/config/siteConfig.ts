@@ -92,7 +92,7 @@ export const siteConfig = {
         "label": "Branches Managed"
       }
     ],
-    "aboutImgPath": "Passport picc.png"
+    "aboutImgPath": "Passport pic.png"
   },
   "experience": {
     "current": {
