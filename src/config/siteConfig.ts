@@ -187,6 +187,17 @@ export const siteConfig = {
         "PostgreSQL",
         "Cloudinary"
       ]
+    },
+    {
+      "title": "কীটনাশক দোকান ERP (Pesticide Retail ERP)",
+      "description": "কীটনাশক ও কৃষি রাসায়নিক খুচরা দোকানের জন্য সম্পূর্ণ বাংলা UI সম্বলিত ERP Web Application। এটি একক ব্যবহারকারীর (দোকান মালিক) জন্য SQLite (better-sqlite3), Next.js 14, এবং Tailwind CSS দিয়ে তৈরি। এতে রয়েছে বাকি লেনদেন ট্র্যাকিং, অটোমেটিক ব্যাকআপ এবং পিডিএফ রশিদ জেনারেশন সুবিধা।",
+      "tags": [
+        "Next.js 14",
+        "SQLite",
+        "TypeScript",
+        "jsPDF",
+        "TailwindCSS"
+      ]
     }
   ],
   "certifications": [
@@ -750,6 +761,94 @@ export const siteConfig = {
         "Integrated Cloudinary image uploads for smooth transaction proof management."
       ],
       "liveUrl": "https://hhhesports.com"
+    },
+    {
+      "slug": "pesticide-erp",
+      "image": "",
+      "category": "AGRICULTURAL ERP & NEXT.JS",
+      "title": "কীটনাশক দোকান ERP: Pesticide Shop Enterprise Management System",
+      "subtitle": "একটি দীর্ঘস্থায়ী খুচরা কীটনাশক দোকানের সম্পূর্ণ বাংলা ইআরপি ও বকেয়া ট্র্যাকিং সিস্টেম",
+      "problem": "কীটনাশক খুচরা বিক্রেতারা মূলত মাস বা বছরব্যাপী বাকিতে লেনদেন করেন। প্রচলিত সফটওয়্যারগুলো অত্যন্ত জটিল, ব্যয়বহুল এবং বাংলা ভাষা ও বাকির খাতার উপযোগী নয়।",
+      "solution": "Next.js 14 ও SQLite ফাইল-বেসড ডাটাবেস দিয়ে তৈরি একক ব্যবহারকারীর একটি অফলাইন/অনলাইন ERP সিস্টেম। এতে আছে সম্পূর্ণ বাংলা ইন্টারফেস, অটোমেটিক ডাটাবেস ট্রিগার, দৈনিক/মাসিক বাকি ও নগদ সেলস রিপোর্ট এবং ওয়ান-ক্লিক ব্যাকআপ সুবিধা।",
+      "results": [
+        "WAL মোডে SQLite ডাটাবেস ও ইন্টিগ্রেটেড ট্রিগার",
+        "ক্লায়েন্ট-সাইড বাংলা পিডিএফ রসিদ ও এক্সেল ডাউনলোড",
+        "আইপি-ভিত্তিক রেট লিমিটিং ও সিকিউর কুকি সেশন",
+        "১০+ বছর মেইনটেইনেবল ফাইল-বেসড ডাটা স্ট্রাকচার"
+      ],
+      "featured": true,
+      "role": "Lead System Architect & Full-Stack Developer",
+      "status": "Active Build (Running)",
+      "completionProgress": {
+        "backend": 100,
+        "frontend": 95
+      },
+      "techStack": {
+        "frontend": [
+          "Next.js 14 (App Router)",
+          "TypeScript",
+          "Tailwind CSS 3",
+          "Hind Siliguri Font"
+        ],
+        "backend": [
+          "SQLite (better-sqlite3)",
+          "Zod Validation",
+          "jose (JWT)",
+          "bcryptjs"
+        ],
+        "infrastructure": [
+          "jsPDF + autoTable",
+          "SheetJS (xlsx)",
+          "Node.js fs Backup Automation"
+        ]
+      },
+      "summary": "কীটনাশক দোকান ERP হল একটি একক ব্যবহারকারী (দোকান মালিক) ভিত্তিক সম্পূর্ণ বাংলা ইআরপি ওয়েব অ্যাপ্লিকেশন, যা বিশেষভাবে কৃষি কীটনাশক খুচরা দোকানের দীর্ঘমেয়াদী বাকি হিসাব ও স্টক ব্যবস্থাপনার জন্য তৈরি। কম খরচে দীর্ঘস্থায়ীভাবে চলার উপযোগী করে এতে better-sqlite3 ডাটাবেস এবং ক্লায়েন্ট-সাইড পিডিএফ রসিদ জেনারেশন ইন্টিগ্রেট করা হয়েছে।",
+      "challenge": {
+        "description": "কৃষি এলাকায় বাকির হিসাব অত্যন্ত জটিল। এই অ্যাপ্লিকেশনের প্রধান চ্যালেঞ্জ ছিল একটি অত্যন্ত সাধারণ ও বোধগম্য বাংলা ইন্টারফেস ডিজাইন করা, এবং কোনো সার্ভার ডেটাবেসের অতিরিক্ত খরচ ছাড়াই সম্পূর্ণ ডেটা সিকিউরিটি ও ব্যাকআপ নিশ্চিত করা। এছাড়া ডেটাবেসে কোনো ভুল হিসাব বা ডাবল এন্ট্রি রোধে রিলেショナル ইন্টিগ্রিটি বজায় রাখা প্রয়োজন ছিল।",
+        "objectives": [
+          "স্বয়ংক্রিয় ডাটাবেস ট্রিগার ব্যবহার করে বকেয়া ও পরিশোধের হিসাব রিয়েল-টাইমে আপডেট রাখা।",
+          "better-sqlite3 ব্যবহার করে WAL মোডে ক্র্যাশ-সেফ ফাইল রাইটিং ও ট্রিগার চালনা করা।",
+          "প্রতিটি রিকোয়েস্টে Zod স্কিমা দিয়ে ভ্যালিডেশন এবং timing-attack ডিফেন্স করা।"
+        ]
+      },
+      "architectureAndSecurity": {
+        "title": "SQLite DB Triggers এবং নিরাপত্তা আর্কিটেকচার",
+        "points": [
+          {
+            "title": "SQLite DB Triggers ও WAL মোড",
+            "description": "ডাটাবেসে balance-accuracy শতভাগ নিশ্চিত করতে manually total_due আপডেট করার পরিবর্তে ট্রিগার ব্যবহার করা হয়েছে। যেমন insert sales এর পর গ্রাহকের total_due ও total_paid ট্রিগার দ্বারা স্বয়ংক্রিয়ভাবে পরিবর্তিত হয়। SQLite-এর Write-Ahead Logging (WAL) মোড চালু রাখার ফলে যেকোনো ক্র্যাশ ও রাইট কনফ্লিক্ট থেকে ডেটা সম্পূর্ণ সুরক্ষিত থাকে।",
+            "codeSnippet": "-- Example of SQLite DB Trigger\nCREATE TRIGGER trg_sale_insert AFTER INSERT ON sales BEGIN\n  UPDATE customers SET total_due = total_due + NEW.due_amount, total_paid = total_paid + NEW.paid_amount WHERE id = NEW.customer_id;\nEND;"
+          },
+          {
+            "title": "Generic timing-attack ডিফেন্স ও রেট লিমিটিং",
+            "description": "অ্যাডমিন লগইন পেইজে timing attacks প্রতিহত করতে অবিকল dummy bcrypt হ্যাশ কম্পারিজন রান করা হয়েছে যাতে ভুল বা সঠিক উভয় ব্যবহারকারীর জন্য সমান রেসপন্স টাইম তৈরি হয়। একই সাথে আইপি ভিত্তিক ৫ রিকোয়েস্ট প্রতি ১৫ মিনিট রেট লিমিটিং এনফোর্স করা আছে।"
+          },
+          {
+            "title": "ওয়ান-ক্লিক অটোমেটিক ফাইল ব্যাকআপ",
+            "description": "কোনো থার্ড-পার্টি প্লাগইন ছাড়াই সরাসরি Node.js fs মডিউলের মাধ্যমে .db ফাইল কপি করে /data/backups/ ফোল্ডারে দৈনিক ব্যাকআপ রাখা হয় এবং সর্বোচ্চ ৩০টি ব্যাকআপ ফাইল রোটেশনে সংরক্ষণ করা হয়।"
+          }
+        ]
+      },
+      "keyFeatures": [
+        {
+          "title": "বাংলা সার্চেবল সেলস ফর্ম ও স্টক আপডেট",
+          "description": "কীটনাশক কোম্পানির নাম (যেমন Syngenta, BASF) এবং পণ্যের ধরন অনুসারে ফিল্টার এবং রিয়েল-টাইম স্টক লেভেল যাচাই করার ফর্ম।"
+        },
+        {
+          "title": "গ্রাহক লেজার খাতা (বাংলা)",
+          "description": "গ্রাহকের সম্পূর্ণ ডেবিট, ক্রেডিট ও ব্যালেন্স হিস্ট্রি সম্বলিত লেজার, যা সরাসরি ওয়ান-ক্লিক প্রিন্ট ও এক্সেল ফাইলে ডাউনলোড করা যায়।"
+        },
+        {
+          "title": "বাংলা পিডিএফ রশিদ জেনারেশন",
+          "description": "jsPDF ও Noto Sans Bengali/Hind Siliguri ফন্ট এম্বেড করে সরাসরি ব্রাউজার থেকে বাংলা ইনভয়েস জেনারেট ও ডাউনলোড করা।"
+        }
+      ],
+      "outcomes": [
+        "একক ব্যবহারকারীর জন্য সম্পূর্ণ জিরো-কনফিগ ও সস্তা হোস্টিং উপযোগী বাংলা ইআরপি সিস্টেম।",
+        "SQLite ডাটাবেস ও ট্রিগারের মাধ্যমে নির্ভুল হিসাব ট্র্যাকিং ও দ্রুত অপারেশন।",
+        "Zod, secure cookie এবং IP-based rate limiting এর মাধ্যমে OWASP-সম্মত সিকিউরিটি।",
+        "SheetJS এবং jsPDF এর মাধ্যমে সম্পূর্ণ সার্ভার-নির্ভরতাহীন ডেক্সটপ এক্সপোর্ট সুবিধা।"
+      ]
     }
   ],
   "skills": [
